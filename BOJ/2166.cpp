@@ -10,10 +10,6 @@ typedef pair<ll, pl> pll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = 1e18+1;
-template <typename T>
-ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
-template <typename T1, typename T2>
-ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 
 ll mod(ll a, ll b) { return ((a%b) + b) % b; }
 ll ext_gcd(ll a, ll b, ll &x, ll &y) {
@@ -30,6 +26,15 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-
+    int n; cin >> n;
+    vector<pl> A(n);
+    for(auto &i : A) cin >> i.fi >> i.se;
+    A.push_back(A[0]);
+    ll s = 0LL;
+    for(int i = 0; i < n; i++) s += A[i].fi*A[i+1].se-A[i].se*A[i+1].fi;
+    s = abs(s);
+    cout << s/2;
+    if(s&1) cout << ".5\n";
+    else cout << ".0\n";
     return 0;
 }
