@@ -15,47 +15,54 @@ ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i 
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 
-ll mod(ll a, ll b) { return ((a%b) + b) % b; }
-ll ext_gcd(ll a, ll b, ll &x, ll &y) {
-    ll g = a; x = 1, y = 0;
-    if(b) g = ext_gcd(b, a % b, y, x), y -= a / b * x;
-    return g;
-}
-ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
-    ll x, y; ll g = ext_gcd(a, m, x, y);
-    if(g > 1) return -1;
-    return mod(x, m);
-}
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    int sqrtN = (int)sqrt(n);
     vector<int> A(n);
     for(auto &i : A) cin >> i;
     int m; cin >> m;
+    int sq = (int)sqrt(n);
     vector<pii> B(m);
+    vector<int> C(m), D(1010101, 0);
     for(int i = 0; i < m; i++) {
         B[i].fi = i;
         cin >> B[i].se.fi >> B[i].se.se;
         B[i].se.fi--;
     }
-    sort(B.begin(), B.end(), [&](pii &a, pii &b) {
-        if(a.se.fi/sqrtN == b.se.fi/sqrtN) return a.se.se < b.se.se;
-        else return a.se.fi/sqrtN < b.se.fi/sqrtN;
+    sort(B.begin(), B.end(), [&](pii& a, pii& b) {
+        if(a.se.fi/sq == b.se.fi/sq) return a.se.se < b.se.se;
+        return a.se.fi/sq < b.se.fi/sq;
     });
-    vector<int> C(m);
     int s = B[0].se.fi, e = B[0].se.se;
-    map<int, int> S;
+    int cnt = 0;
     for(int i = s; i < e; i++) {
-        if(S.find(A[i]) == S.end()) S.insert({A[i], 1});
-        else S[A[i]]++;
+        if(D[A[i]] == 0) cnt++;
+        D[A[i]]++;
     }
-    C[B[0].fi] = S.size();
+    C[B[0].fi] = cnt;
     for(int i = 1; i < m; i++) {
-        
-        C[B[i].fi] = S.size();
+        while(s > B[i].se.fi) {
+            s--;
+            if(D[A[s]] == 0) cnt++;
+            D[A[s]]++;
+        }
+        while(e < B[i].se.se) {
+            if(D[A[e]] == 0) cnt++;
+            D[A[e]]++;
+            e++;
+        }
+        while(s < B[i].se.fi) {
+            D[A[s]]--;
+            if(D[A[s]] == 0) cnt--;
+            s++;
+        }
+        while(e > B[i].se.se) {
+            e--;
+            D[A[e]]--;
+            if(D[A[e]] == 0) cnt--;
+        }
+        C[B[i].fi] = cnt;
     }
     for(auto &i : C) cout << i << "\n";
     return 0;

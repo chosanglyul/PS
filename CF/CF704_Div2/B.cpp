@@ -30,19 +30,25 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    string s; cin >> s; s += "1";
-    vector<int> A;
-    for(int lst = -1, i = 0; i < s.size(); i++) {
-        if(s[i] == '1') {
-            A.push_back(i-lst-1);
-            lst = i;
+    int t; cin >> t;
+    while(t--) {
+        int n; cin >> n;
+        vector<int> A(n), B(n), C, D;
+        for(int i = 0; i < n; i++) {
+            cin >> A[i];
+            B[--A[i]] = i;
         }
+        for(int i = 0; i < n; i++) {
+            while(D.size() && D.back() > B[i]) D.pop_back();
+            D.push_back(B[i]);
+        }
+        D.push_back(n);
+        reverse(D.begin(), D.end());
+        for(int i = 1; i < D.size(); i++) {
+            for(int j = D[i]; j < D[i-1]; j++)
+                C.push_back(A[j]+1);
+        }
+        cout << C;
     }
-    sort(A.begin(), A.end(), greater<int>());
-    //cout << A;
-    if(A[0] <= 2) cout << 1 << "\n";
-    else if(A[1] == 0) cout << (A[0]-2)/3+1 << "\n";
-    else cout << max((A[0]-2)/3, (A[1]-1)/2)+1 << "\n";
     return 0;
 }
