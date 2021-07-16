@@ -14,6 +14,8 @@ template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define rnd(x, y) uniform_int_distribution<int>(x, y)(rng)
 
 ll mod(ll a, ll b) { return ((a%b) + b) % b; }
 ll ext_gcd(ll a, ll b, ll &x, ll &y) {
