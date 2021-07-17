@@ -56,7 +56,8 @@ class segtree {
     ll query(int i, int s, int e, int l, int r) {
         if(l <= s && e <= r) return seg[i];
         else if(r <= s || l >= e) return 0LL;
-        else return query(i<<1, s, s+e>>1, l, r)+query(i<<1|1, s+e>>1, e, l, r);
+        else return query(i<<1, s, s+e>>1, l, r)+
+                    query(i<<1|1, s+e>>1, e, l, r);
     }
     
     public:
@@ -76,12 +77,10 @@ int main() {
     int n, m, k; cin >> n >> m >> k;
     segtree s(n);
     int q = m+k;
-    //cout << s.n << endl << s.seg;
     while(q--) {
         ll x, y, z; cin >> x >> y >> z;
         if(x == 1) s.update(--y, z);
         else cout << s.query(--y, z) << "\n";
-        //cout << s.seg;
     }
     return 0;
 }

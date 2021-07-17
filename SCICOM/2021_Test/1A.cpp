@@ -8,8 +8,12 @@ typedef pair<ll, pl> pll;
 #define fi first
 #define se second
 const int INF = 1e9+1;
-const int P = 1e9+7;
+const int P = 1000000007;
 const ll LLINF = 1e18+1;
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
+template <typename T1, typename T2>
+ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 
 ll mod(ll a, ll b) { return ((a%b) + b) % b; }
 ll ext_gcd(ll a, ll b, ll &x, ll &y) {
@@ -25,13 +29,8 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 
 int main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> A(n);
-    for(auto &i : A) cin >> i;
-    vector<int> B(A), C(A);
-    sort(B.begin(), B.end());
-    B.erase(unique(B.begin(), B.end()), B.end());
-    for(auto &i : A) cout << lower_bound(B.begin(), B.end(), i) - B.begin() << " ";
+    while(n--) cout << "SciComLove\n";
     return 0;
 }
