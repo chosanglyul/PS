@@ -32,6 +32,22 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    vector<ll> A(m+1, 0), B(m+1, 0), C(2*m+3, 0);
+    for(int i = 0; i < n; i++) {
+        int a, b; cin >> a >> b;
+        A[a]++, B[b]++;
+    }
+    for(int i = 0; i <= m; i++) {
+        for(int j = 0; j <= m; j++) {
+            C[i+j] += A[i]*A[j];
+            C[i+j+1] -= B[i]*B[j];
+        }
+    }
+    ll tmp = 0LL;
+    for(int i = 0; i < 2*m+1; i++) {
+        tmp += C[i];
+        cout << tmp << "\n";
+    }
     return 0;
 }

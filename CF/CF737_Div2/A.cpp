@@ -32,6 +32,17 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    cout << fixed << setprecision(10);
+    while(t--) {
+        ll n; cin >> n;
+        vector<ll> A(n);
+        for(auto &i : A) cin >> i;
+        sort(A.begin(), A.end());
+        ll su = 0LL;
+        for(ll i = 0LL; i < n-1; i++) su += A[i];
+        su += A.back()*(n-1);
+        cout << (double)su/(n-1) << "\n";
+    }
     return 0;
 }

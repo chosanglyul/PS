@@ -28,10 +28,30 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     if(g > 1) return -1;
     return mod(x, m);
 }
+ll gop(ll a, ll b) {
+    ll ans = 1LL;
+    while(b) {
+        if(b&1LL) ans = (ans*a)%P;
+        a = (a*a)%P;
+        b >>= 1LL;
+    }
+    return ans;
+}
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        ll n, k; cin >> n >> k;
+        if(n&1LL) {
+            cout << gop(mod(gop(2LL, n-1)+1LL, P), k) << "\n";
+        } else {
+            ll ans = 0LL;
+            ll tmp = mod(gop(2LL, n-1)-1LL, P);
+            for(ll i = 0; i < k; i++) ans = mod(ans+mod(gop(gop(2LL, n), k-1LL-i)*gop(tmp, i), P), P);
+            cout << mod(ans+gop(tmp, k), P) << "\n";
+        }
+    }
     return 0;
 }

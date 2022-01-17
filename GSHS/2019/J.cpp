@@ -32,6 +32,15 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<ll> A(n);
+    for(auto &i : A) cin >> i;
+    sort(A.begin(), A.end());
+    ll ans = 0LL;
+    for(int i = 0; i < n; i++) {
+        ll x = lower_bound(A.begin(), A.end(), A[i]) - A.begin();
+        ans = mod(ans+mod(inv(n-x+1, P)*x, P), P);
+    }
+    cout << ans << "\n";
     return 0;
 }

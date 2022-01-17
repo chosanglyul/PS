@@ -32,6 +32,37 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    string s; cin >> s;
+    int n = s.size();
+    vector<int> A(n), B(n);
+    for(int i = 0; i < n; i++) {
+        A[i] = i;
+        B[i] = s[i]-'a';
+    }
+    for(int d = 1; ; d <<= 1) {
+        auto cmp = [&](int a, int b) {
+            if(B[a] != B[b]) return B[a] < B[b];
+            a += d, b += d;
+            return (a < n && b < n) ? (B[a] < B[b]) : (a > b);
+        };
+        sort(A.begin(), A.end(), cmp);
+        vector<int> T(n, 0);
+        for(int i = 1; i < n; i++) {
+            if(cmp(A[i-1], A[i])) T[i] = T[i-1]+1;
+            else T[i] = T[i-1];
+        }
+        for(int i = 0; i < n; i++) B[A[i]] = T[i];
+        if(T.back() == n-1) break;
+    }
+    for(auto i : A) cout << i+1 << " ";
+    cout << "\n";
+    vector<int> C(n-1);
+    for(int i = 0, j = 0; i < n; i++, j = max(j-1, 0)) {
+        if(B[i] == n-1) continue;
+        int k = A[B[i]+1];
+        while(s[i+j] == s[k+j]) j++;
+        C[B[i]] = j;
+    }
+    cout << "x " << C;
     return 0;
 }

@@ -32,6 +32,32 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<pi> A(n);
+    set<pi> S;
+    for(auto &i : A) {
+        cin >> i.fi >> i.se;
+        S.insert(i);
+    }
+    sort(A.begin(), A.end(), [&](pi a, pi b) {
+        if(a.se == b.se) return a.fi < b.fi;
+        return a.se < b.se;
+    });
+    int ans = 0;
+    pi lst = {-INF, -INF};
+    while(S.size()) {
+        pi tmp = *S.begin();
+        if(tmp > lst) ans++;
+        int idx = lower_bound(A.begin(), A.end(), tmp, [&](pi a, pi b) {
+            if(a.se == b.se) return a.fi < b.fi;
+            return a.se < b.se;
+        }) - A.begin();
+        for(int i = idx; i < A.size(); i++) {
+            lst = max(lst, A[i]);
+            S.erase(A[i]);
+        }
+        A.erase(A.begin()+idx, A.end());
+    }
+    cout << ans << "\n";
     return 0;
 }

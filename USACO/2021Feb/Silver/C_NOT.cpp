@@ -29,9 +29,19 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+vector<vector<int>> getV(int n) {
+    return vector<vector<int>>(n, vector<int>(n, 0));
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<vector<int>> A = getV(n);
+    for(auto &i : A) for(auto &j : i) cin >> j;
+    //i, [j, k]
+    vector<vector<vector<int>>> B(n), C(n);
+    for(auto &i : B) i = getV(n);
+    for(auto &i : C) i = getV(n);
     return 0;
 }

@@ -29,9 +29,24 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+int calc(vector<int>& A, int d) {
+    int res = 0;
+    for(int i = 0, j = 1; i < A.size(); i++, j *= d) res += j*A[i];
+    return res;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, d; cin >> n >> d;
+    vector<int> A, B;
+    for(int i = 0; i < d; i++) A.push_back(i);
+    do {
+        if(A.back()) B.push_back(calc(A, d));
+    } while(next_permutation(A.begin(), A.end()));
+    sort(B.begin(), B.end());
+    auto iter = upper_bound(B.begin(), B.end(), n);
+    if(iter == B.end()) cout << -1 << "\n";
+    else cout << *iter << "\n";
     return 0;
 }

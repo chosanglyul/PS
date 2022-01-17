@@ -29,9 +29,40 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+void dfs(int x, int p, vector<vector<int>>& E, vector<int>& A,
+    vector<int>& C, vector<int>& D, int& cnt) {
+    C[x] = A[x] = cnt++;
+    int cc = 0;
+    for(auto i : E[x]) {
+        if(i == p) continue;
+        if(A[i] == -1) {
+            cc++;
+            dfs(i, x, E, A, C, D, cnt);
+            if(p < 0 && cc >= 2) D.push_back(x+1);
+            if(p >= 0 && C[i] >= A[x]) D.push_back(x+1);
+            C[x] = min(C[x], C[i]);
+        } else C[x] = min(C[x], A[i]);
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    vector<vector<int>> E(n);
+    for(int i = 0; i < m; i++) {
+        int x, y; cin >> x >> y; --x, --y;
+        E[x].push_back(y);
+        E[y].push_back(x);
+    }
+    vector<int> A(n, -1), C(n), D;
+    int cnt = 0;
+    for(int i = 0; i < n; i++)
+        if(A[i] < 0) dfs(i, -1, E, A, C, D, cnt);
+    //cout << A << C;
+    sort(D.begin(), D.end());
+    D.erase(unique(D.begin(), D.end()), D.end());
+    cout << D.size() << "\n";
+    cout << D;
     return 0;
 }

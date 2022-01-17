@@ -32,6 +32,35 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        int n; cin >> n;
+        vector<int> A(n);
+        for(auto &i : A) { cin >> i; i--; }
+        vector<vector<bool>> chk(n, vector<bool>(n, false));
+        int m; cin >> m;
+        for(int i = 0; i < m; i++) {
+            int x, y; cin >> x >> y; --x, --y;
+            chk[x][y] = chk[y][x] = true;
+        }
+        int cnt = 0;
+        while(true) {
+            bool ch = false;
+            for(int i = 0; i < n-1; i++) {
+                int x = A[i], y = A[i+1];
+                if(chk[x][y] || chk[y][x]) {
+                    swap(A[i], A[i+1]);
+                    chk[x][y] = chk[y][x] = false; cnt++;
+                    ch = true;
+                }
+            }
+            if(!ch) break;
+        }
+        if(cnt < m) cout << "IMPOSSIBLE\n";
+        else {
+            for(auto i : A) cout << i+1 << " ";
+            cout << "\n";
+        }
+    }
     return 0;
 }

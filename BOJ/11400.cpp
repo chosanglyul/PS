@@ -29,9 +29,43 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+void dfs(int x, int p, vector<vector<int>>& E, vector<int>& A,
+    vector<int>& C, vector<pi>& D, int& cnt) {
+    C[x] = A[x] = cnt++;
+    int cc = 0, tt = -1;
+    for(auto i : E[x]) {
+        if(i == p) continue;
+        if(A[i] == -1) {
+            cc++, tt = i;
+            dfs(i, x, E, A, C, D, cnt);
+            if(C[i] > A[x]) D.push_back({i, x});
+            C[x] = min(C[x], C[i]);
+        } else C[x] = min(C[x], A[i]);
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    vector<vector<int>> E(n);
+    for(int i = 0; i < m; i++) {
+        int x, y; cin >> x >> y; --x, --y;
+        E[x].push_back(y);
+        E[y].push_back(x);
+    }
+    vector<int> A(n, -1), C(n);
+    vector<pi> D;
+    int cnt = 0;
+    for(int i = 0; i < n; i++)
+        if(A[i] < 0) dfs(i, -1, E, A, C, D, cnt);
+    for(auto &i : D) {
+        if(i.fi > i.se) swap(i.fi, i.se);
+        i.fi++, i.se++;
+    }
+    sort(D.begin(), D.end());
+    D.erase(unique(D.begin(), D.end()), D.end());
+    cout << D.size() << "\n";
+    for(auto &i : D) cout << i << "\n";
     return 0;
 }

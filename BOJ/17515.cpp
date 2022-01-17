@@ -28,10 +28,28 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     if(g > 1) return -1;
     return mod(x, m);
 }
+ll myabs(ll x) { return (x > 0 ? x : -x); }
+
+ll solve(int n, vector<int>& A, vector<int>& B, int a, int b) {
+    vector<int> Q;
+    for(int i = 0; i < n; i++) {
+        if(B[i] > b) Q.push_back(i);
+    }
+    ll ans = 0LL;
+    for(int i = 0, j = 0, k = 0; i < n; i++) {
+        if(A[i] <= a) ans += myabs(i-Q[j++]);
+    }
+    return ans;
+}
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> A(n), B(n);
+    for(auto &i : A) cin >> i;
+    for(auto &i : B) cin >> i;
+    if(n&1) cout << min(solve(n, A, B, n>>1, n+1>>1), solve(n, A, B, n+1>>1, n>>1)) << "\n";
+    else cout << solve(n, A, B, n>>1, n>>1) << "\n";
     return 0;
 }

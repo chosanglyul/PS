@@ -29,9 +29,20 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+bool solve(ll n, int k) {
+    if(k < 0) return (n == 0LL);
+    if(n < 0LL) n = -n;
+    return solve(n-(1LL<<k), k-1);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    ll n, tmp = 1LL; cin >> n;
+    int i = 0;
+    if(n < 0LL) n = -n;
+    while(tmp <= n) tmp <<= 1, i++;
+    if(solve(n, --i)) cout << i+1 << "\n";
+    else cout << -1 << "\n";
     return 0;
 }

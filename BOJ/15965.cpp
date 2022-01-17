@@ -29,9 +29,24 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+int solve(int n, int k) {
+    vector<bool> chk(n, true);
+    vector<int> P;
+    for(int i = 2; i < n; i++) {
+        if(chk[i]) {
+            P.push_back(i);
+            if(P.size() >= k) return P.back();
+            for(int j = i*2; j < n; j += i)
+                chk[j] = false;
+        }
+    }
+    exit(1);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int k; cin >> k;
+    cout << solve(10000000, k) << "\n";
     return 0;
 }

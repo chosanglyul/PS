@@ -9,7 +9,7 @@ typedef pair<ll, pl> pll;
 #define se second
 const int INF = 1e9+1;
 const int P = 1000000007;
-const ll LLINF = (ll)1e18+1;
+const ll LLINF = 1e18+1;
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
@@ -32,6 +32,18 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        int m; cin >> m;
+        vector<int> A(m), B(m);
+        for(auto &i : A) cin >> i;
+        for(auto &i : B) cin >> i;
+        vector<int> C(1, 0), D(1, 0);
+        for(auto i : A) C.push_back(C.back()+i);
+        for(auto i : B) D.push_back(D.back()+i);
+        int ans = INF;
+        for(int i = 0; i < m; i++) ans = min(ans, max(C.back()-C[i+1], D[i]));
+        cout << ans << "\n";
+    }
     return 0;
 }

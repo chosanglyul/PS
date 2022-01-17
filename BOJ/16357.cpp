@@ -9,11 +9,13 @@ typedef pair<ll, pl> pll;
 #define se second
 const int INF = 1e9+1;
 const int P = 1000000007;
-const ll LLINF = 1e18+1;
+const ll LLINF = (ll)1e18+1;
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+#define rnd(x, y) uniform_int_distribution<int>(x, y)(rng)
 
 ll mod(ll a, ll b) { return ((a%b) + b) % b; }
 ll ext_gcd(ll a, ll b, ll &x, ll &y) {
@@ -40,70 +42,66 @@ class segtree {
         }
         lazy[i] = 0;
     }
-    void init(int i, int s, int e, vector<int>& A) {
-        if(s+1 == e) {
-            seg[i] = A[s];
-        } else {
-            init(i<<1, s, s+e>>1, A);
-            init(i<<1|1, s+e>>1, e, A);
-            seg[i] = min(seg[i<<1], seg[i<<1|1]);
-        }
-    }
     void update(int i, int s, int e, int l, int r, int x) {
         prop(i, s, e);
-        if(l >= e || s >= r) return;
+        if(r <= s || e <= l) return;
         if(l <= s && e <= r) {
             seg[i] += x;
             lazy[i] += x;
         } else {
             update(i<<1, s, s+e>>1, l, r, x);
             update(i<<1|1, s+e>>1, e, l, r, x);
-            seg[i] = min(seg[i<<1], seg[i<<1|1]);
+            seg[i] = max(seg[i<<1], seg[i<<1|1]);
         }
     }
-    int query(int i, int s, int e, int x) {
-        prop(i, s, e);
-        if(e <= x || s > x) return INF;
-        if(s+1 == e) return seg[i];
-        return min(query(i<<1, s, s+e>>1, x), query(i<<1|1, s+e>>1, e, x));
-    }
+    //int query(int i, int s, int e, int l, int r) {}
 
     public:
-    segtree(vector<int>& A) {
-        n = A.size();
-        seg.resize(4*n);
-        lazy.resize(4*n);
-        init(1, 0, n, A);
+    segtree(int nn) {
+        n = nn;
+        seg = vector<int>(4*n, 0);
+        lazy = vector<int>(4*n, 0);
     }
+    void update(int l, int r, int x) { update(1, 0, n, l, r, x); }
+    //int query(int l, int r) { return query(1, 0, n, l, r); }
     int query() { return seg[1]; }
-    int query(int x) { return query(1, 0, n, x); }
-    void update(int l, int r, int x) { if(l < r) update(1, 0, n, l, r, x); }
 };
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> A(n);
-    for(auto &i : A) cin >> i;
-    vector<int> B(A);
-    sort(B.begin(), B.end());
-    B.erase(unique(B.begin(), B.end()), B.end());
-    for(auto &i : A) i = lower_bound(B.begin(), B.end(), i) - B.begin();
-    vector<int> C(B.size(), 0);
-    segtree T(C);
-    ll su = 0LL;
-    for(int i = 0; i < n; i++) {
-        su += T.query(A[i]);
-        T.update(0, A[i], 1);
+    vector<pi> A(n);
+    vector<int> B;
+    for(auto &i : A) {
+        int x, y; cin >> x >> i.se >> y >> i.fi;
+        B.push_back(i.fi); B.push_back(i.se);
     }
-    segtree S(C);
-    for(auto i : A) S.update(i+1, C.size(), 1);
+    vector<int> C(B);
+    sort(C.begin(), C.end());
+    C.erase(unique(C.begin(), C.end()), C.end());
+    vector<pii> D;
     for(int i = 0; i < n; i++) {
-        if(i) S.update(0, A[i-1], 1);
-        S.update(A[i]+1, C.size(), -1);
-        cout << su-S.query(A[i])+S.query() << " ";
+        A[i].fi = lower_bound(C.begin(), C.end(), A[i].fi) - C.begin();
+        A[i].se = lower_bound(C.begin(), C.end(), A[i].se) - C.begin();
+        D.push_back({A[i].fi, {1, i}}); D.push_back({++A[i].se, {-1, i}});
     }
-    cout << "\n";
+    sort(D.begin(), D.end());
+    int cnt = 0, ans = 0;
+    segtree S(C.size());
+    for(auto &i : A) S.update(i.fi, i.se, 1);
+    vector<int> E;
+    for(auto &i : D) E.push_back(i.fi);
+    sort(E.begin(), E.end());
+    E.erase(unique(E.begin(), E.end()), E.end());
+    for(int i = 0, j = 0; j < E.size(); j++) {
+        for(; D[i].fi == E[j]; i++) {
+            pi tmp = A[D[i].se.se];
+            S.update(tmp.fi, tmp.se, -D[i].se.fi);
+            cnt += D[i].se.fi;
+        }
+        ans = max(ans, cnt+S.query());
+    }
+    cout << ans << "\n";
     return 0;
 }

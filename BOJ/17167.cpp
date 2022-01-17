@@ -32,6 +32,17 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    ll a, b; cin >> a >> b;
+    vector<string> A;
+    while(a != b) {
+        while(a%2 == 0) { A.push_back("B+=B"); a >>= 1; }
+        while(b%2 == 0) { A.push_back("A+=A"); b >>= 1; }
+        if(a == b) break;
+        else if(a < b) { A.push_back("B+=A"); b += a; }
+        else { A.push_back("A+=B"); a += b; }
+    }
+    if(A.size() > 5000) exit(1);
+    cout << A.size() << "\n";
+    for(auto &i : A) cout << i << "\n";
     return 0;
 }

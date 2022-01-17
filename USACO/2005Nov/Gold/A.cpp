@@ -29,9 +29,33 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+bool dfs(int x, vector<vector<int>>& E, vector<int>& A, vector<bool>& vis) {
+    if(vis[x]) return false;
+    vis[x] = true;
+    for(auto i : E[x]) {
+        if(A[i] == -1 || dfs(A[i], E, A, vis)) {
+            A[i] = x;
+            return true;
+        }
+    }
+    return false;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, k; cin >> n >> k;
+    vector<vector<int>> E(n);
+    vector<int> A(n, -1);
+    for(int i = 0; i < k; i++) {
+        int x, y; cin >> x >> y; --x, --y;
+        E[x].push_back(y);
+    }
+    int ans = 0;
+    for(int i = 0; i < n; i++) {
+        vector<bool> vis(n, false);
+        if(dfs(i, E, A, vis)) ans++;
+    }
+    cout << ans << "\n";
     return 0;
 }

@@ -32,6 +32,9 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int m, f, n; cin >> m >> f >> n; m--;
+    int tmp = n/m, cnt = n%m;
+    if(cnt) tmp++;
+    cout << tmp << "\n";
     return 0;
 }

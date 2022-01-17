@@ -29,9 +29,19 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+int calc(int n, int b, int d) {
+    if(d >= b) return d-b;
+    return n-b+n-d;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        int n, m, rb, cb, rd, cd;
+        cin >> n >> m >> rb >> cb >> rd >> cd;
+        cout << min(calc(n, rb, rd), calc(m, cb, cd)) << "\n";
+    }
     return 0;
 }

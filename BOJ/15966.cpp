@@ -32,6 +32,13 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> A(n);
+    for(auto &i : A) cin >> i;
+    vector<int> chk(1010101, 0);
+    for(int i = 0; i < n; i++) chk[A[i]] = chk[A[i]-1]+1;
+    int ans = 0;
+    for(auto i : chk) ans = max(ans, i);
+    cout << ans << "\n";
     return 0;
 }

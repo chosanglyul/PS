@@ -29,9 +29,30 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+ll myabs(int x) {
+    if(x < 0) return -x;
+    else return x;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    ll su = 0LL;
+    vector<ll> A(n), B(n);
+    for(auto &i : A) {
+        cin >> i;
+        su += i;
+    }
+    sort(A.begin(), A.end());
+    for(int i = 0; i < n; i++) {
+        B[i] = su/n;
+        if(i < su%n) B[i]++;
+    }
+    reverse(B.begin(), B.end());
+    ll ans = 0LL;
+    for(int i = 0; i < n; i++)
+        ans += abs(A[i]-B[i]);
+    cout << ans/2 << "\n";
     return 0;
 }

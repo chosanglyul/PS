@@ -29,9 +29,40 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+void solve(int l, int r, vector<vector<bool>>& chk) {
+    if(l == r) {
+        cout << l << " " << r << " " << l << "\n";
+    } else if(chk[l+1][r]) {
+        cout << l << " " << r << " " << l << "\n";
+        solve(l+1, r, chk);
+    } else if(chk[l][r-1]) {
+        cout << l << " " << r << " " << r << "\n";
+        solve(l, r-1, chk);
+    } else {
+        for(int d = l+1; d < r; d++) {
+            if(chk[l][d-1] && chk[d+1][r]) {
+                cout << l << " " << r << " " << d << "\n";
+                solve(l, d-1, chk);
+                solve(d+1, r, chk);
+                return;
+            }
+        }
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        int n; cin >> n;
+        vector<vector<bool>> chk(n+1, vector<bool>(n+1, false));
+        for(int i = 0; i < n; i++) {
+            int x, y; cin >> x >> y;
+            chk[x][y] = true;
+        }
+        solve(1, n, chk);
+        cout << "\n";
+    }
     return 0;
 }

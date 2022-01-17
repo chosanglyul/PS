@@ -9,7 +9,7 @@ typedef pair<ll, pl> pll;
 #define se second
 const int INF = 1e9+1;
 const int P = 1000000007;
-const ll LLINF = (ll)1e18+1;
+const ll LLINF = 1e18+1;
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
@@ -32,6 +32,30 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    for(int tt = 1; tt <= t; tt++) {
+        int n; cin >> n;
+        vector<int> A(n);
+        for(auto &i : A) { cin >> i; i--; }
+        vector<vector<int>> B;
+        vector<bool> chk(n, false);
+        for(int i = 0; i < n; i++) {
+            if(chk[i]) continue;
+            B.push_back(vector<int>());
+            int tmp = i;
+            while(!chk[tmp]) {
+                chk[tmp] = true;
+                B.back().push_back(tmp);
+                tmp = A[tmp];
+            }
+        }
+        int ans = 0;
+        for(auto &i : B) {
+            if(i.size() == 1) continue;
+            ans += i.size();
+        }
+        cout << "Case #" << tt << ": " << ans << ".000000\n";
+
+    }
     return 0;
 }

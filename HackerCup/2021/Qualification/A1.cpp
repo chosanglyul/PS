@@ -32,6 +32,22 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    for(int tt = 1; tt <= t; tt++) {
+        int ans = INF;
+        string s; cin >> s;
+        int vc = 0, cc = 0;
+        vector<int> C(26);
+        for(auto i : s) {
+            C[i-'A']++;
+            if(i == 'A' || i == 'E' || i == 'O' || i == 'I' || i == 'U') vc++;
+            else cc++;
+        }
+        for(char c = 'A'; c-'A' < C.size(); c++) {
+            if(c == 'A' || c == 'E' || c == 'O' || c == 'I' || c == 'U') ans = min(ans, 2*(vc-C[c-'A'])+cc);
+            else ans = min(ans, 2*(cc-C[c-'A'])+vc);
+        }
+        cout << "Case #" << tt << ": " << ans << "\n";
+    }
     return 0;
 }

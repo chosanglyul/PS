@@ -32,6 +32,16 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        ll w, h; cin >> w >> h;
+        pl a, b; cin >> a.fi >> a.se >> b.fi >> b.se;
+        pl x, y = {b.fi - a.fi, b.se - a.se}; cin >> x.fi >> x.se;
+        ll ans = LLINF;
+        if(x.fi+y.fi <= w) ans = min(ans, min(max(0LL, x.fi-a.fi), max(0LL, b.fi+x.fi-w)));
+        if(x.se+y.se <= h) ans = min(ans, min(max(0LL, x.se-a.se), max(0LL, b.se+x.se-h)));
+        if(ans == LLINF) cout << -1 << "\n";
+        else cout << ans << "\n";
+    }
     return 0;
 }

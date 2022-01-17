@@ -32,6 +32,33 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    vector<pii> A(m);
+    vector<int> B(n, -1);
+    for(auto &i : A) {
+        cin >> i.fi >> i.se.fi >> i.se.se; --i.se.fi;
+        if(!i.se.se) {
+            //start
+            if(B[i.se.fi] >= 0) {
+                cout << "NO\n";
+                return 0;
+            }
+            B[i.se.fi] = i.fi;
+        } else {
+            //end
+            if(B[i.se.fi] == -1 || B[i.se.fi]+60 > i.fi) {
+                cout << "NO\n";
+                return 0;
+            }
+            B[i.se.fi] = -1;
+        }
+    }
+    for(auto &i : B) {
+        if(i >= 0) {
+            cout << "NO\n";
+            return 0;
+        }
+    }
+    cout << "YES\n";
     return 0;
 }

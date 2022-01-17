@@ -32,6 +32,22 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, k, q; cin >> n >> k >> q;
+    vector<vector<int>> A(n, vector<int>(k));
+    for(auto &i : A) for(auto &j : i) { cin >> j; j--; }
+    ll su = 0;
+    for(int i = 0; i < n; i++) {
+        for(auto j : A[i]) {
+            ll tmp = j-i;
+            if(tmp < 0) tmp += n;
+            su += tmp;
+        }
+    }
+    su /= n;
+    bool chk = false;
+    for(auto i : A[0])
+        if(i) chk = true;
+    if(!chk) su++;
+    cout << (su <= q) << "\n";
     return 0;
 }

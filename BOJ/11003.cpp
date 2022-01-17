@@ -32,6 +32,16 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, l; cin >> n >> l;
+    vector<int> A(n);
+    for(auto &i : A) cin >> i;
+    deque<pi> D;
+    for(int i = 0; i < n; i++) {
+        while(D.size() && D.back().fi > A[i]) D.pop_back();
+        D.push_back({A[i], i});
+        while(D.front().se <= i-l) D.pop_front();
+        cout << D[0].fi << " ";
+    }
+    cout << "\n";
     return 0;
 }

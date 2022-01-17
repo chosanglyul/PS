@@ -32,6 +32,27 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    string s; cin >> s;
+    int n = s.size();
+    vector<int> A(n);
+    for(int i = 0; i < n; i++) A[i] = s[i]-'0';
+    if(A[0] > A[1] || A[n-2] < A[n-1]) {
+        cout << "NON ALPSOO\n";
+        return 0;
+    }
+    for(int i = 1; i < n; i++) {
+        if(A[i] == A[i-1]) {
+            cout << "NON ALPSOO\n";
+            return 0;
+        }
+    }
+    for(int i = 2; i < n; i++) {
+        if((A[i]-A[i-1])*(A[i-1]-A[i-2]) < 0) continue;
+        if(A[i]-A[i-1] != A[i-1]-A[i-2]) {
+            cout << "NON ALPSOO\n";
+            return 0;
+        }
+    }
+    cout << "ALPSOO\n";
     return 0;
 }

@@ -32,6 +32,34 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    string s; cin >> s;
+    deque<int> A;
+    vector<pi> B;
+    for(int i = 0, j = 1; i < s.size(); i++, j++) {
+        if(i+1 == s.size() || s[i] != s[i+1]) {
+            A.push_back(j);
+            j = 0;
+        }
+    }
+    while(A.size() > 3) {
+        if(A[1] >= A[2]) {
+            B.push_back({A[0]+A[1]-A[2]+1, A[0]+A[1]+A[2]});
+            A[3] += A[1]-A[2];
+            A[2] = A[0];
+        } else {
+            B.push_back({A[0]+1, A[0]+A[1]*2});
+            A[2] += A[0]-A[1];
+        }
+        A.pop_front();
+        A.pop_front();
+    }
+    if(A.size() == 3) {
+        B.push_back({A[0]+A[1]-A[2]+1, A[0]+A[1]+A[2]});
+        A[1] -= A[2];
+        A.pop_back();
+    }
+    B.push_back({1, A[0]+A[1]});
+    cout << B.size() << "\n";
+    for(auto i : B) cout << i << "\n";
     return 0;
 }

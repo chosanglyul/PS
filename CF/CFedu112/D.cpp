@@ -9,7 +9,7 @@ typedef pair<ll, pl> pll;
 #define se second
 const int INF = 1e9+1;
 const int P = 1000000007;
-const ll LLINF = (ll)1e18+1;
+const ll LLINF = 1e18+1;
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
@@ -32,6 +32,28 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    string s; cin >> s;
+    vector<vector<int>> A(n+1, vector<int>(9, 0));
+    for(int i = 0; i < n; i++) {
+        A[i+1] = A[i];
+        A[i+1][(s[i]-'a')*3+i%3]++;
+    }
+    while(m--) {
+        int l, r; cin >> l >> r; l--;
+        vector<int> B(9), C(3);
+        for(int i = 0; i < 9; i++) {
+            B[i] = A[r][i]-A[l][i];
+            if(i < 3) C[i] = i;
+        }
+        int ans = 0;
+        do {
+            int tmp = 0;
+            for(int i = 0; i < 3; i++)
+                tmp += B[C[i]*3+i];
+            ans = max(ans, tmp);
+        } while(next_permutation(C.begin(), C.end()));
+        cout << r-l-ans << "\n";
+    }
     return 0;
 }

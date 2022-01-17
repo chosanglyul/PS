@@ -29,9 +29,33 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+vector<int> getpi(string& b) {
+    vector<int> pi(b.size(), 0);
+    for(int i = 1; i < b.size(); i++) {
+        pi[i] = pi[i-1];
+        while(pi[i] > 0 && b[pi[i]] != b[i]) pi[i] = pi[pi[i]-1];
+        if(b[pi[i]] == b[i]) pi[i]++;
+    }
+    return pi;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    while(true) {
+        string s; cin >> s;
+        if(s == ".") break;
+        int ans = 1, n = s.size();
+        vector<int> pi = getpi(s);
+        for(int i = 1; i*2 <= n; i++) {
+            if(n%i) continue;
+            bool can = true;
+            for(int j = 2*i-1; j < n; j += i) {
+                if(pi[j] == 0 || pi[j]%i) can = false;
+            }
+            if(can) ans = max(ans, n/i);
+        }
+        cout << ans << "\n";
+    }
     return 0;
 }

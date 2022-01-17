@@ -29,9 +29,46 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+struct Node {
+    int cnt = 0;
+    vector<int> nxt = vector<int>(26, -1);
+    void set(char c, int i) { nxt[c-'a'] = i; }
+    int get(char c) { return nxt[c-'a']; }
+};
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    cout << fixed << setprecision(2);
+    int n;
+    while(cin >> n) {
+        vector<string> S(n);
+        for(auto &i : S) cin >> i;
+        vector<Node> T(1);
+        for(auto &i : S) {
+            int tmp = 0;
+            for(auto j : i) {
+                //cout << tmp << " ";
+                if(T[tmp].get(j) == -1) {
+                    T[tmp].cnt++;
+                    T[tmp].set(j, T.size());
+                    T.push_back(Node());
+                }
+                tmp = T[tmp].get(j);
+            }
+            T[tmp].cnt++;
+            //cout << tmp << "\n";
+        }
+        int ans = 0;
+        for(auto &i : S) {
+            int tmp = 0;
+            for(auto j : i) {
+                //cout << tmp << " ";
+                if(tmp == 0 || T[tmp].cnt > 1) ans++;
+                tmp = T[tmp].get(j);
+            }
+        }
+        cout << (double)ans/n << "\n";
+    }
     return 0;
 }
