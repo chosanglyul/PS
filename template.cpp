@@ -11,7 +11,7 @@ const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
 template <typename T>
-ostream& operator<<(ostream& os, const vector<T>& v) { for(auto &i : v) os << i << " "; os << "\n"; return os; }
+ostream& operator<<(ostream& os, const vector<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
