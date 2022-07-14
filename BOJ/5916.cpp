@@ -62,27 +62,34 @@ class segtree {
     public:
     segtree(vector<int>& A) {
         n = A.size();
-        seg.resize(4*n);
+        seg = vector<int>(4*n, 0);
         init(1, 0, n, A);
     }
     void update(int j, int x) { update(1, 0, n, j, x); }
     int query(int l, int r) { return query(1, 0, n, l, r+1); }
 };
 
-typedef struct Node{
-    int siz, dep, par, in, out, top = 0;
-} Node;
+typedef struct Node{ int siz, dep = 0, par = 0, in, out, top = 0; } Node;
 
-void dfs(int x, int d, int p, int& cnt, vector<vector<int>>& E, vector<Node>& A) {
-    A[x].in = cnt++, A[x].dep = d++, A[x].siz = 1, A[x].par = p;
-    auto iter = find(E[x].begin(), E[x].end(), p);
+void dfs1(int x, vector<vector<int>>& E, vector<Node>& A) {
+    A[x].siz = 1;
+    auto iter = find(E[x].begin(), E[x].end(), A[x].par);
     if(iter != E[x].end()) E[x].erase(iter);
     for(auto &i : E[x]) {
-        dfs(i, d, x, cnt, E, A);
+        A[i].par = x;
+        A[i].dep = A[x].dep+1;
+        dfs1(i, E, A);
         A[x].siz += A[i].siz;
         if(A[E[x][0]].siz < A[i].siz) swap(i, E[x][0]);
     }
-    for(auto &i : E[x]) A[i].top = (i == E[x][0] ? A[x].top : i);
+}
+
+void dfs2(int x, int& cnt, vector<vector<int>>& E, vector<Node>& A) {
+    A[x].in = cnt++;
+    for(auto &i : E[x]) {
+        A[i].top = (i == E[x][0] ? A[x].top : i);
+        dfs2(i, cnt, E, A);
+    }
     A[x].out = cnt;
 }
 
@@ -90,9 +97,8 @@ int query(int a, int b, segtree& S, vector<Node>& A) {
     int ret = 0;
     while(A[a].top != A[b].top) {
         if(A[A[a].top].dep < A[A[b].top].dep) swap(a, b);
-        int s = A[a].top;
-        ret = max(ret, S.query(A[s].in, A[a].in));
-        a = A[s].par;
+        ret = max(ret, S.query(A[A[a].top].in, A[a].in));
+        a = A[A[a].top].par;
     }
     if(A[a].dep > A[b].dep) swap(a, b);
     ret = max(ret, S.query(A[a].in+1, A[b].in));
@@ -112,18 +118,19 @@ int main() {
         C.push_back({z, {x, y}});
     }
     vector<Node> A(n);
+    dfs1(0, E, A);
     int cnt = 0;
-    dfs(0, 0, 0, cnt, E, A);
-    vector<int> B(n);
+    dfs2(0, cnt, E, A);
+    vector<int> B(n, 0);
     for(auto &i : C) {
         if(A[i.se.fi].dep < A[i.se.se].dep) swap(i.se.fi, i.se.se);
-        B[i.se.fi] = i.fi;
+        B[A[i.se.fi].in] = i.fi;
     }
     segtree S(B);
     int m; cin >> m;
     while(m--) {
         int t, x, y; cin >> t >> x >> y;
-        if(t == 1) S.update(A[B[C[--x].se.fi]].in, y);
+        if(t == 1) S.update(A[C[--x].se.fi].in, y);
         else cout << query(--x, --y, S, A) << "\n";
     }
     return 0;
