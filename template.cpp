@@ -23,7 +23,7 @@ ll ext_gcd(ll a, ll b, ll &x, ll &y) {
     if(b) g = ext_gcd(b, a % b, y, x), y -= a / b * x;
     return g;
 }
-ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
+ll inv(ll a, ll m) {
     ll x, y; ll g = ext_gcd(a, m, x, y);
     if(g > 1) return -1;
     return mod(x, m);
