@@ -23,7 +23,7 @@ ll ext_gcd(ll a, ll b, ll &x, ll &y) {
     if(b) g = ext_gcd(b, a % b, y, x), y -= a / b * x;
     return g;
 }
-ll inv(ll a, ll m) {
+ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     ll x, y; ll g = ext_gcd(a, m, x, y);
     if(g > 1) return -1;
     return mod(x, m);
@@ -32,6 +32,26 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        ll a, b; cin >> a >> b;
+        if(a < 0LL || b < 0LL || a > b) cout << "IMPOSSIBLE\n";
+        else if(a == b) {
+            if(a == 1) cout << "AMBIGUOUS\n";
+            else cout << a << "\n";
+        } else if(a <= 1LL || b <= 1LL) cout << "IMPOSSIBLE\n";
+        else {
+            vector<ll> A;
+            while(b) {
+                A.push_back(b%a);
+                b /= a;
+            }
+            reverse(A.begin(), A.end());
+            ll su = 0LL;
+            for(auto i : A) su += i;
+            if(su == a) cout << A;
+            else cout << "IMPOSSIBLE\n";
+        }
+    }
     return 0;
 }

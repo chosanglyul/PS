@@ -29,9 +29,32 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+vector<int> mana(string& s) {
+    string t = ".";
+    for(auto i : s) {
+        t += i;
+        t += '.';
+    }
+    int n = t.size();
+    vector<int> P(n, 0);
+    for(int i = 0, r = 0, c = 0; i < n; i++) {
+        P[i] = max(0, min(P[2*c-i], r-i));
+        while(i-P[i]-1 >= 0 && i+P[i]+1 < n && t[i-P[i]-1] == t[i+P[i]+1]) P[i]++;
+        if(r < i+P[i]) {
+            r = i+P[i];
+            c = i;
+        }
+    }
+    return P;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    string s; cin >> s;
+    vector<int> M = mana(s);
+    ll ans = 0LL;
+    for(auto i : M) ans += (i+1)/2;
+    cout << ans << "\n";
     return 0;
 }

@@ -14,16 +14,15 @@ template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-#define rnd(x, y) uniform_int_distribution<int>(x, y)(rng)
 
+/* https://github.com/justiceHui/AlgorithmImplement/blob/master/Math/ExtendGCD.cpp */
 ll mod(ll a, ll b) { return ((a%b) + b) % b; }
 ll ext_gcd(ll a, ll b, ll &x, ll &y) {
     ll g = a; x = 1, y = 0;
     if(b) g = ext_gcd(b, a % b, y, x), y -= a / b * x;
     return g;
 }
-ll inv(ll a, ll m) {
+ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     ll x, y; ll g = ext_gcd(a, m, x, y);
     if(g > 1) return -1;
     return mod(x, m);
@@ -32,6 +31,27 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    cout.tie(nullptr);
+    int t; cin >> t;
+    for(int _t = 0; _t < t; _t++) {
+        cout << "Case #" << _t+1 << endl;
+        int n, k; cin >> n >> k;
+        vector<int> A(n);
+        for(auto &i : A) cin >> i;
+        ll l = 0LL, r = n;
+        ll cnt = 0LL, ans = 0LL;
+        while(l < r) {
+            while(l < r && A[l] >= k) l++;
+            while(l < r && A[r-1] >= k) r--;
+            if(l == r) break;
+            ll tmp = min(k-A[l], k-A[r-1]);
+            if(tmp) {
+                cnt += tmp;
+                k -= tmp;
+                ans += tmp*(r-l);
+            }
+        }
+        cout << cnt << " " << ans << "\n";
+    }
     return 0;
 }

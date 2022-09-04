@@ -32,6 +32,16 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
+    int n, m = 0; cin >> n;
+    string s; cin >> s;
+    int a = n>>1, b = n>>1;
+    for(auto i : s) {
+        if(i == '?') m++;
+        else if(i == '(') a--;
+        else if(i == ')') b--;
+    }
+    vector<pi> A(m);
+    for(auto &i : A) cin >> i.fi >> i.se;
     
     return 0;
 }
