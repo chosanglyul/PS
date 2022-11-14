@@ -44,18 +44,16 @@ ll dst(Point p, Point q) {
 }
 
 vector<Point> hull(vector<Point> A) {
-    vector<Point> hull;
     swap(A[0], *min_element(A.begin(), A.end()));
     sort(A.begin()+1, A.end(), [&](Point a, Point b) {
         ll cw = ccw(A[0], a, b);
         if(cw) return cw > 0;
-        return dst(A[0], a) < dst(A[0], b);
+        //return dst(A[0], a) < dst(A[0], b);
+        if(a.x == b.x) return a.y > b.y;
+        if(a.y == b.y) return a.x < b.x;
+        return a.y > b.y;
     });
-    for(auto &i : A) {
-        while(hull.size() >= 2 && ccw(hull[hull.size()-2], hull.back(), i) <= 0) hull.pop_back();
-        hull.push_back(i);
-    }
-    return hull;
+    return A;
 }
 
 int main() {
@@ -64,10 +62,12 @@ int main() {
     int n; cin >> n;
     vector<Point> A;
     for(int i = 0; i < n; i++) {
-        ll x, y; cin >> x >> y;
+        ll x, y; char c; cin >> x >> y >> c;
+        if(c == 'N') continue;
         A.push_back(Point(x, y));
     }
     vector<Point> h = hull(A);
     cout << h.size() << "\n";
+    for(auto &i : h) cout << i.x << " " << i.y << "\n";
     return 0;
 }

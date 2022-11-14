@@ -29,62 +29,76 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
-int myabs(int x) { return (x > 0 ? x : -x); }
-int getn(int x, int n) {
-    int tmp = myabs(x); tmp--;
-    if(x < 0) tmp += n;
-    return tmp;
-}
+struct TwoSat { // 1-based
+    int n;
+    vector<vector<int>> G, H;
+    vector<vector<int>> SCC;
+    vector<int> Chk, Stk, Id;
 
-void dfs1(int x, vector<vector<int>>& E, vector<int>& S, vector<bool>& vis) {
-    if(vis[x]) return;
-    vis[x] = true;
-    for(auto i : E[x]) dfs1(i, E, S, vis);
-    S.push_back(x);
-}
-
-void dfs2(int x, int i, vector<vector<int>>& E, vector<int>& S, vector<int>& V, vector<bool>& vis) {
-    if(vis[x]) return;
-    vis[x] = true;
-    S.push_back(x);
-    V[x] = i;
-    for(auto j : E[x]) dfs2(j, i, E, S, V, vis);
-}
+    TwoSat(int _n) {
+        n = 2 * _n + 1; 
+        G.resize(n); H.resize(n);
+        Chk.resize(n); Id.resize(n);
+    }
+    void add(int x, int y) {
+        if (x < 0) x += n;
+        if (y < 0) y += n;
+        G[n - x].push_back(y);
+        H[y].push_back(n - x);
+        G[n - y].push_back(x);
+        H[x].push_back(n - y);
+    }
+    void dfs(int cur) {
+        if (Chk[cur]) return; Chk[cur] = true;
+        for (int x : G[cur]) dfs(x);
+        Stk.push_back(cur);
+    }
+    void back_dfs(int cur, int idx) {
+        if (Chk[cur]) return; Chk[cur] = true;
+        SCC[idx].push_back(cur);
+        Id[cur] = idx;
+        for (int x : H[cur]) back_dfs(x, idx);
+    }
+    void get_SCC() {
+        for (int i = 1; i < n; i++) {
+            if (!Chk[i]) dfs(i);
+        }
+        fill(Chk.begin(), Chk.end(), false);
+        while (!Stk.empty()) {
+            int x = Stk.back(); Stk.pop_back();
+            if (Chk[x]) continue;
+            SCC.push_back(vector<int>(0));
+            back_dfs(x, SCC.size() - 1);
+        }
+    }
+    vector<bool> solve() {
+        get_SCC();
+        for (int i = 1; i <= n / 2; i++) {
+            if (Id[i] == Id[n - i]) return vector<bool>(0);
+        }
+        vector<int> Ans(n, -1);
+        for (int i = 0; i < SCC.size(); i++) {
+            if (Ans[SCC[i][0]] != -1) continue;
+            for (int x : SCC[i]) {
+                Ans[x] = 0; Ans[n - x] = 1;
+            }
+        }
+        vector<bool> ret(Ans.begin() + 1, Ans.begin() + 1 + n / 2);
+        return ret;
+    }
+};
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n, m; cin >> n >> m;
-    vector<vector<int>> E(2*n);
-    while(m--) {
-        int x, y; cin >> x >> y;
-        E[getn(-x, n)].push_back(getn(y, n));
-        E[getn(-y, n)].push_back(getn(x, n));
-    }
-    //cout << " " << E;
-    vector<int> S, V(E.size());
-    vector<bool> vis(E.size(), false);
-    for(int i = 0; i < E.size(); i++)
-        dfs1(i, E, S, vis);
-    vector<vector<int>> SCC, EE(E.size());
-    for(int i = 0; i < E.size(); i++)
-        for(int j = 0; j < E[i].size(); j++)
-            EE[E[i][j]].push_back(i);
-    for(int i = 0; i < vis.size(); i++) vis[i] = false;
-    reverse(S.begin(), S.end());
-    //cout << S;
-    for(int i = 0, j = 0; i < S.size(); i++) {
-        if(vis[S[i]]) continue;
-        SCC.push_back(vector<int>());
-        dfs2(S[i], j++, EE, SCC.back(), V, vis);
-    }
-    //cout << " " << SCC;
+    int m, n; cin >> m >> n;
+    TwoSat ts(m);
     for(int i = 0; i < n; i++) {
-        if(V[i] == V[i+n]) {
-            cout << "0\n";
-            return 0;
-        }
+        int x, y; cin >> x >> y;
+        ts.add(x, y);
     }
-    cout << "1\n";
+    vector<bool> ret = ts.solve();
+    if(ret.empty()) cout << 0;
+    else cout << 1;
     return 0;
 }

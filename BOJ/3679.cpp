@@ -43,31 +43,35 @@ ll dst(Point p, Point q) {
     return (p.x-q.x)*(p.x-q.x)+(p.y-q.y)*(p.y-q.y);
 }
 
-vector<Point> hull(vector<Point> A) {
-    vector<Point> hull;
+typedef pair<Point, int> ppi;
+vector<int> sorting(vector<ppi> A) {
     swap(A[0], *min_element(A.begin(), A.end()));
-    sort(A.begin()+1, A.end(), [&](Point a, Point b) {
-        ll cw = ccw(A[0], a, b);
+    sort(A.begin()+1, A.end(), [&](ppi x, ppi y) {
+        Point a = x.fi, b = y.fi, c = A[0].fi;
+        ll cw = ccw(c, a, b);
         if(cw) return cw > 0;
-        return dst(A[0], a) < dst(A[0], b);
+        return dst(c, a) < dst(c, b);
     });
-    for(auto &i : A) {
-        while(hull.size() >= 2 && ccw(hull[hull.size()-2], hull.back(), i) <= 0) hull.pop_back();
-        hull.push_back(i);
-    }
-    return hull;
+    int idx = (int)A.size()-2;
+    while(idx >= 0 && ccw(A[0].fi, A[idx].fi, A[idx+1].fi) == 0) idx--;
+    reverse(A.begin()+(++idx), A.end());
+    vector<int> R;
+    for(auto &i : A) R.push_back(i.se);
+    return R;
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<Point> A;
-    for(int i = 0; i < n; i++) {
-        ll x, y; cin >> x >> y;
-        A.push_back(Point(x, y));
+    while(n--) {
+        int m; cin >> m;
+        vector<ppi> A;
+        for(int i = 0; i < m; i++) {
+            int x, y; cin >> x >> y;
+            A.push_back({Point(x, y), i});
+        }
+        cout << sorting(A);
     }
-    vector<Point> h = hull(A);
-    cout << h.size() << "\n";
     return 0;
 }
