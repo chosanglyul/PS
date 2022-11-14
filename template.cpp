@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-typedef pair<int, int> pi;
-typedef pair<int, pi> pii;
-typedef pair<ll, ll> pl;
-typedef pair<ll, pl> pll;
+typedef pair<int, int> pii;
+typedef pair<int, pii> piii;
+typedef pair<ll, ll> pll;
+typedef pair<ll, pll> plll;
 #define fi first
 #define se second
 const int INF = 1e9+1;
