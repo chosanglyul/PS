@@ -29,26 +29,26 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+pii solve(string& s) {
+    bool b = s.back() == '1';
+    int n = s.size();
+    s.pop_back();
+    if(n == 1) {
+        if(b) return {2, 2};
+        else return {1, 1};
+    }
+    pii tmp = solve(s);
+    if(b) return {(tmp.fi<<1), (1<<(n-1))+tmp.se};
+    else return {tmp.fi, 2*tmp.se-1};
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
-    }
+    string s; cin >> s;
+    pii tmp = solve(s);
+    for(int i = tmp.fi; i <= tmp.se; i++) cout << i << " ";
+    cout << "\n";
     return 0;
 }

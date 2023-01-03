@@ -29,26 +29,28 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+vector<int> in(int n) {
+    vector<int> A(n);
+    for(int i = 0; i < n; i++) {
+        int x; cin >> x;
+        A[--x] = i;
+    }
+    return A;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
-    }
+    vector<int> A = in(n);
+    vector<int> B = in(n);
+    vector<int> C = in(n);
+    vector<int> ans;
+    for(int i = 0; i < n; i++) ans.push_back(i);
+    sort(ans.begin(), ans.end(), [&](int a, int b) {
+        return ((A[a] < A[b]) + (B[a] < B[b]) + (C[a] < C[b])) >= 2;
+    });
+    for(auto i : ans) cout << i+1 << " ";
+    cout << "\n";
     return 0;
 }

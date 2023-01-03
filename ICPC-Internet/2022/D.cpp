@@ -29,7 +29,7 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
-const int MAX = 1e5+1;
+const int MAX = 1e6+1;
 
 int main() {
     ios_base::sync_with_stdio(false);

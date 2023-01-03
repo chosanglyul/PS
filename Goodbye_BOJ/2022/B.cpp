@@ -32,23 +32,16 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
+    cout << fixed << setprecision(10);
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+    vector<int> A(n);
+    for(auto &i : A) cin >> i;
+    sort(A.begin(), A.end());
+    if(n == 1) cout << (double)A[0] << "\n";
+    else {
+        ll su = 0LL;
+        for(auto i : A) su += i;
+        cout << max((double)A[n-2], (double)su/n) << "\n";
     }
     return 0;
 }

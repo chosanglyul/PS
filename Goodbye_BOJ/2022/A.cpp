@@ -32,23 +32,31 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
+    int t; cin >> t;
+    while(t--) {
+        int n; cin >> n;
+        vector<int> A;
+        int su = 0;
+        for(int i = 1; i < n; i++) {
+            if(n%i == 0) {
+                A.push_back(i);
+                su += i;
+            }
+        }
+        if(su <= n) {
+            cout << "BOJ 2022\n";
+            continue;
+        }
         bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
+        for(auto i : A) {
+            su = 0;
+            for(int j = 1; j < i; j++) {
+                if(i%j == 0) su += j;
             }
+            if(su > i) can = false;
         }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+        if(can) cout << "Good Bye\n";
+        else cout << "BOJ 2022\n";
     }
     return 0;
 }

@@ -32,23 +32,23 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
+    int n, a, b; cin >> n >> a >> b;
+    vector<piii> A(n);
+    for(int i = 0; i < n; i++) cin >> A[i].fi >> A[i].se.fi >> A[i].se.se;
+    sort(A.begin(), A.end(), [&](piii& a, piii& b) { return a.se.se < b.se.se; });
+    vector<vector<int>> D(a+1, vector<int>(b+1, 0));
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j <= a; j++) {
+            for(int k = 0; k <= b; k++) {
+                int p = min(A[i].se.fi, k/A[i].se.se);
+                int x = j-A[i].se.fi+p, y = k-p*A[i].se.se;
+                if(x < 0) continue;
+                D[x][y] = max(D[x][y], D[j][k]+A[i].fi);
             }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
         }
     }
+    int ans = 0;
+    for(auto i : D) for(auto j : i) ans = max(ans, j);
+    cout << ans << "\n";
     return 0;
 }

@@ -32,23 +32,29 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
+    int q; cin >> q;
+    while(q--) {
+        int x, t, n; cin >> x >> t >> n;
+        pll ans = {LLINF, LLINF};
+        vector<int> A;
+        while (true) {
+            A.push_back(0);
+            fill(A.begin(), A.end(), 1);
+            int m = n;
+            for(int i = 0, y = x+1; i < A.size(); i++, y++) m -= y;
+            if(m < 0) break;
+            for(int i = 0, y = x+1; i < A.size(); i++, y++) {
+                int tmp = min(m/y, t-A[i]);
+                m -= tmp*y;
+                A[i] += tmp;
             }
+            reverse(A.begin(), A.end());
+            ll tmp = 0LL;
+            for(int i = 0, y = x+1; i < A.size(); i++, y++) tmp += (ll)y*A[i];
+            ans = min(ans, {(ll)n-min((ll)n, tmp), A.size()});
         }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+        cout << " " << ans.fi << "\n";
+        cout << ans.se << "\n";
     }
     return 0;
 }

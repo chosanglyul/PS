@@ -32,23 +32,23 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+    int n, m; cin >> n >> m;
+    int sx = 0, ex = n, sy = 0, ey = m;
+    int q; cin >> q;
+    while(q--) {
+        int x, y, t; cin >> x >> y >> t; --x, --y;
+        switch(t) {
+            case 1: sy = y, ey = y+1, sx = max(sx, x+1); break;
+            case 2: sy = y, ey = y+1, ex = min(ex, x); break;
+            case 3: sx = x, ex = x+1, ey = min(ey, y); break;
+            case 4: sx = x, ex = x+1, sy = max(sy, y+1); break;
+            case 5: sx = max(sx, x+1), sy = max(sy, y+1); break;
+            case 6: ex = min(ex, x), sy = max(sy, y+1); break;
+            case 7: sx = max(sx, x+1), ey = min(ey, y); break;
+            case 8: ex = min(ex, x), ey = min(ey, y); break;
+            case 9: sy = y, ey = y+1, sx = x, ex = x+1; break;
         }
     }
+    cout << (ll)(ey-sy)*(ex-sx) << "\n";
     return 0;
 }

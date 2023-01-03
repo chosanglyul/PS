@@ -32,23 +32,31 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
+    int n, k, x0, y0; cin >> n >> k >> x0 >> y0;
+    vector<int> dp(k+1, INF);
+    for(int i = 0; i < n; i++) {
+        int x, y; cin >> x >> y; x -= x0, y -= y0;
+        int s; cin >> s;
+        switch(s) {
+            case 1: y = -y; swap(x, y); break;
+            case 2: x = -x; y = -y; break;
+            case 0: x = -x; swap(x, y); break;
+            default: break;
         }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+        int c = max(-(x+y), -(y-x)), v;
+        if(c <= 0) {
+            c = 0;
+            v = abs(x)+abs(y);
+        } else {
+            v = 2*abs(x);
         }
+        //cout << x << " " << y << " " << c << " " << v << "\n";
+        for(int j = k; j >= 0; j--) dp[min(j+v, k)] = min(dp[min(j+v, k)], dp[j]+c);
+        dp[min(v, k)] = min(dp[min(v, k)], c);
     }
+    //cout << dp;
+    int ans = INF;
+    for(int i = 0; i <= k; i++) ans = min(ans, k-i+dp[i]);
+    cout << ans << "\n";
     return 0;
 }

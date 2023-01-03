@@ -32,23 +32,26 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+    const int MAX = 1010101;
+    int x, t, m, v, n; cin >> x >> t >> m >> v >> n;
+    vector<pii> A(n);
+    for(auto &i : A) {
+        int x, m, c; cin >> x >> m >> c;
+        i.fi = c, i.se = x*m;
+    }
+    vector<ll> dp(MAX, LLINF); dp[0] = m*x;
+    for(auto &i : A) {
+        for(int j = MAX-1; j >= 0; j--) {
+            if(i.fi+j >= MAX) continue;
+            dp[i.fi+j] = min(dp[i.fi+j], dp[j]+i.se);
         }
     }
+    int ans = -1;
+    for(int i = 0; i < MAX; i++) {
+        if(dp[i] <= t*m*v) {
+            ans = max(ans, i);
+        }
+    }
+    cout << ans << "\n";
     return 0;
 }

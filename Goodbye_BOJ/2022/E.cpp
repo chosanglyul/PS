@@ -29,25 +29,33 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+ll getma(ll k, ll a, ll b, ll c) {
+    ll ans = min((k-1LL)*b, (k/2LL)*a+((k-1LL)/2LL)*c);
+    if(k%2LL == 0LL) ans = min(ans, ((k-1LL)/2LL)*a+((k-1LL)/2LL)*c+b);
+    return ans;
+}
+ll getmi(ll k, ll a, ll b, ll c) {
+    ll ans = max((k-1LL)*b, ((k-1LL)/2LL)*a+(k/2LL)*c);
+    if(k%2LL == 0LL) ans = max(ans, ((k-1LL)/2LL)*a+((k-1LL)/2LL)*c+b);
+    return ans;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+    int t; cin >> t;
+    while(t--) {
+        ll a, b, c, n, k; cin >> a >> b >> c >> n >> k;
+        if(a < c) swap(a, c);
+        if(a >= b && b >= c) {
+            cout << getmi(k, a, b, c)+(n-k)*a << " ";
+            cout << (k-1LL)*c+getma(n-k+1LL, a, b, c) << "\n";
+        } else if(b >= a) {
+            cout << (n-1LL)*b << " ";
+            cout << (k-1LL)*c+getma(n-k+1LL, a, b, c) << "\n";
+        } else {
+            cout << getmi(k, a, b, c)+(n-k)*a << " ";
+            cout << (n-1LL)*b << "\n";
         }
     }
     return 0;

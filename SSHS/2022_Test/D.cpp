@@ -33,22 +33,19 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
+    vector<ll> A(n);
+    for(auto &i : A) cin >> i;
+    vector<ll> C(1, 0LL);
+    for(auto i : A) C.push_back(C.back()+i);
+    vector<vector<ll>> B(n, vector<ll>(n, 0LL));
+    for(int i = 1; i < n; i++) {
+        for(int j = 0; i+j < n; j++) {
+            for(int k = j; k < i+j; k++) {
+                ll x = C[k+1]-C[j], y = C[i+j+1]-C[k+1];
+                B[j][i+j] = min(B[j][i+j], B[j][k]+B[k+1][i+j]+min(x*y, 0LL));
             }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
         }
     }
+    cout << B[0][n-1] << "\n";
     return 0;
 }

@@ -29,26 +29,32 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void out(int x, vector<int> A) {
+    if(x == 0) return;
+    out(x-1, A);
+    cout << A[x-1] << "\n";
+    out(x-1, A);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
+    vector<int> A;
+    vector<bool> chk(1<<20, false); chk[0] = true;
+    for(int i = 0; i < n; i++) {
+        int x; cin >> x;
+        vector<bool> t(chk);
+        bool can = false;
+        for(int j = 0; j < chk.size(); j++)
+            if(chk[j] && !chk[j^x])
+                can = t[j^x] = true;
         if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+            A.push_back(i+1);
+            chk = t;
         }
     }
+    cout << ((1<<((int)A.size()))-1) << "\n";
+    out(A.size(), A);
     return 0;
 }

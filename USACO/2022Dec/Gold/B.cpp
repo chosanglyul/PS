@@ -12,6 +12,8 @@ const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
+template <typename T>
+ostream& operator<<(ostream& os, const set<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
@@ -33,22 +35,20 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+    vector<int> A(n);
+    for(auto &i : A) cin >> i;
+    auto cmp = [](pii a, pii b) { return (ll)a.fi*b.se <= (ll)b.fi*a.se; };
+    int q; cin >> q;
+    for(int i = 0; i < q; i++) {
+        int x, y; cin >> x >> y; A[--x] += y;
+        vector<vector<pii>> S(n);
+        for(int i = 0; i < n; i++)
+            for(int j = i+1; j < n; j++)
+                if(S[i].empty() || cmp(*(--S[i].end()), {A[j]-A[i], j-i}))
+                    S[i].push_back({A[j]-A[i], j-i});
+        int ans = 0;
+        for(int j = 0; j < n; j++) ans += S[j].size();
+        cout << ans << "\n";
     }
     return 0;
 }

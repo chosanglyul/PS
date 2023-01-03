@@ -32,23 +32,27 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
+    int n, m, b; cin >> n >> m >> b;
+    vector<vector<int>> A(n, vector<int>(m));
+    for(auto &i : A) for(auto &j : i) cin >> j;
+    int hh, minc = INF;
+    for(int h = 256; h >= 0; h--) {
+        int cost = 0, lft = b;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                if(h > A[i][j]) {
+                    cost += h-A[i][j];
+                } else {
+                    cost += 2*(A[i][j]-h);
+                }
+                lft += A[i][j]-h;
             }
         }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+        if(lft >= 0 && cost < minc) {
+            minc = cost;
+            hh = h;
         }
     }
+    cout << minc << " " << hh << "\n";
     return 0;
 }

@@ -29,26 +29,34 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void dfs(int x, int d, vector<vector<int>>& E, vector<bool>& chk, vector<bool>& col) {
+    if(chk[x]) return;
+    chk[x] = true;
+    if(d%2 == 1) col[x] = true;
+    else col[x] = false;
+    for(auto i : E[x]) dfs(i, d+1, E, chk, col);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
+    int t; cin >> t;
+    while(t--) {
+        int n, m; cin >> n >> m;
+        vector<vector<int>> E(n);
+        vector<pii> EE;
+        vector<bool> chk(n, false), col(n, false);
+        for(int i = 0; i < m; i++) {
+            int x, y; cin >> x >> y; --x, --y;
+            EE.push_back({x, y});
+            E[x].push_back(y);
+            E[y].push_back(x);
+        }
+        for(int i = 0; i < n; i++) dfs(i, 0, E, chk, col);
         bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+        for(auto e : EE) if(col[e.fi] == col[e.se]) can = false;
+        if(can) cout << "YES\n";
+        else cout << "NO\n";
     }
     return 0;
 }

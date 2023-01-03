@@ -29,26 +29,43 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+ll getma(ll val, int x, int t) {
+    return val*x+val*(val+1LL)/2LL;
+}
+
+ll getmi(ll val, int x, int t) {
+    ll trn = val/t;
+    return (trn*(trn+1LL)/2LL)*t+(trn+1LL)*(val-trn*t)+val*x;
+}
+
+
+ll search(int val, int x, int t, int gets) {
+    gets -= val;
+    int fl = gets/(t-1), le = gets%(t-1);
+    return (ll)(val+x+1)*(x+val)/2-(ll)(x+1)*x/2+(ll)le*(x-fl+val)+(ll)(t-1)*((ll)(x+val)*(x+val+1)/2-(ll)(x+val-fl)*(x+val-fl+1)/2);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
+    int t; cin >> t;
+    while(t--) {
+        int x, t, n; cin >> x >> t >> n;
+        int l = 1, r = n+1;
+        while(l+1 < r) {
+            int mi = l+r>>1;
+            if(getmi(mi, x, t) > n) r = mi;
+            else l = mi;
         }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+        int target = (int)min((ll)n, getma(l, x, t));
+        //cout << " " << target-n << " " << l << "\n";
+        int s = 1, e = l+1;
+        while(s+1 < e) {
+            int mi = s+e>>1;
+            if(search(mi-1, x, t, l) >= target) e = mi;
+            else s = mi;
         }
+        cout << s << "\n";
     }
     return 0;
 }

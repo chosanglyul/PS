@@ -32,23 +32,30 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+    const int N = 1e6+1e5;
+    int n, k; ll m; cin >> n >> m >> k;
+    vector<ll> A(N, 0LL);
+    for(int i = 0; i <= n; i++) cin >> A[i];
+    vector<pll> B(N, {0LL, 0LL});
+    for(int i = 0; i+1 < N; i++) {
+        B[i].fi += A[i];
+        B[i+1].fi += B[i].fi/k;
+        B[i+1].se += B[i].fi/k;
+        B[i].fi %= k;
     }
+
+    string s;
+    for(int i = N-1; i > 0; i--) {
+        s.push_back(B[i].fi/m+'0');
+        ll tmp = min(B[i].fi%m, B[i].se);
+        B[i-1].fi += tmp*k;
+    }
+    s.push_back(B[0].fi/m+'0');
+    reverse(s.begin(), s.end());
+    while(s.size() && s.back() == '0') s.pop_back();
+    if(s.size()) {
+        reverse(s.begin(), s.end());
+        cout << s << "\n";
+    } else cout << 0 << "\n";
     return 0;
 }

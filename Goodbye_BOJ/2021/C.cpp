@@ -32,23 +32,24 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+    int n, g, k; cin >> n >> g >> k;
+    vector<pii> A, B;
+    for(int i = 0; i < n; i++) {
+        int s, l, o; cin >> s >> l >> o;
+        if(o) B.push_back({s, l});
+        else A.push_back({s, l});
     }
+    ll l = 0LL, r = 3LL*(ll)INF;
+    vector<ll> C(B.size());
+    while(l+1LL < r) {
+        ll mi = l+r>>1, cnt = 0LL;
+        for(auto &i : A) cnt += (ll)i.fi*max(1LL, mi-i.se);
+        for(int i = 0; i < B.size(); i++) C[i] = (ll)B[i].fi*max(1LL, mi-B[i].se);
+        sort(C.begin(), C.end());
+        for(int i = 0; i < (int)B.size()-k; i++) cnt += C[i];
+        if(cnt <= g) l = mi;
+        else r = mi;
+    }
+    cout << l << "\n";
     return 0;
 }

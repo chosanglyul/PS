@@ -32,23 +32,37 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
+    int n, k, p; cin >> n >> k >> p;
+    int x = n, y;
+    vector<ll> A = {1LL, 1LL};
+    while(A.back() < INF) A.push_back(A.back()*A.size());
+    A.pop_back();
+
+    int ans;
+    if(n == 2) {
+        ans = 2;
+    } else if(k == 2) {
+        if(n >= A.size()) ans = INF;
+        else ans = A[n];
+        if(ans >= p) {
+            ans = 0;
+        } else if(n == 12) {
+            ll tmp = 1LL;
+            for(int i = p-1; i > ans; i--) tmp = (tmp*i)%p;
+            tmp = inv(tmp, p);
+            ans = (int)mod(-tmp, p);
+        } else {
+            ll tmp = 1LL;
+            for(int i = 1; i <= ans; i++) tmp = (tmp*i)%p;
+            ans = tmp;
         }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
+    } else if(n == 3 && k == 3) {
+        ll tmp = 1LL;
+        for(int i = 1; i <= 720; i++) tmp = (tmp*i)%p;
+        ans = tmp;
+    } else {
+        ans = 0;
     }
+    cout << ans%p << "\n";
     return 0;
 }

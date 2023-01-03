@@ -29,26 +29,25 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void solve(int s, int e, int js, int je, int d, vector<ll> &D, vector<ll> &T, vector<ll> &V) {
+    int mi = s+e>>1, mj = -1;
+    for(int i = max(js, mi-d); i <= min(je, mi); i++)
+        if(mj == -1 || V[mj]-mj*T[mi] < V[i]-i*T[mi])
+            mj = i;
+    D[mi] = mi*T[mi]-mj*T[mi]+V[mj];
+    if(s+1 == e) return;
+    solve(s, mi, js, mj, d, D, T, V);
+    solve(mi, e, mj, je, d, D, T, V);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
-    }
+    int n, d; cin >> n >> d;
+    vector<ll> D(n), T(n), V(n);
+    for(auto &i : T) cin >> i;
+    for(auto &i : V) cin >> i;
+    solve(0, n, 0, n, d, D, T, V);
+    cout << *max_element(D.begin(), D.end()) << "\n";
     return 0;
 }

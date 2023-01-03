@@ -32,23 +32,11 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
+    string s = "SciComLove";
     int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
-        }
-    }
+    n %= s.size();
+    for(int i = n; i < s.size(); i++) cout << s[i];
+    for(int i = 0; i < n; i++) cout << s[i];
+    cout << "\n";
     return 0;
 }

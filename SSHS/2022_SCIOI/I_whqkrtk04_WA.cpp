@@ -32,22 +32,19 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n; cin >> n;
-    vector<int> P;
-    for(int i = 2; i < n+10; i++) {
-        bool can = true;
-        for(int j = 2; j*j <= i; j++) {
-            if(i%j == 0) {
-                can = false;
-                break;
-            }
-        }
-        if(can) {
-            if(P.size() && P.back()*i > n) {
-                cout << P.back()*i << "\n";
-                return 0;
-            }
-            P.push_back(i);
+    int t; cin >> t;
+    while(t--) {
+        int a, b, c, p; cin >> a >> b >> c >> p;
+        if((a%p==0)+(b%p==0)+(c%p==0) >= 2) {
+            cout << 1 << "\n";
+        } else if((a*b*c)%(p*p) == 0) {
+            if(a%(p*p) == 0) swap(a, c);
+            if(b%(p*p) == 0) swap(b, c);
+            c /= p*p;
+            if(a == 1 && b == 1 && c == 1) cout << 0 << "\n";
+            else cout << 1 << "\n";
+        } else {
+            cout << 0 << "\n";
         }
     }
     return 0;
