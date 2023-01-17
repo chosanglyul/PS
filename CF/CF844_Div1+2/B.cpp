@@ -10,10 +10,10 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T1, typename T2>
-ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
+template <typename T1, typename T2>
+ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define rnd(x, y) uniform_int_distribution<int>(x, y)(rng)
 
@@ -32,6 +32,23 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int t; cin >> t;
+    while(t--) {
+        int n; cin >> n;
+        vector<int> A(n);
+        for(auto &i : A) cin >> i;
+        sort(A.begin(), A.end());
+        int ans = A[0] > 0, idx = 0;
+        while(idx < n) {
+            int st = idx;
+            while(idx < n && A[idx] == A[st]) idx++;
+            int ed = idx;
+            bool can = true;
+            if(ed < n && A[ed] <= ed) can = false;
+            if(A[st] >= ed) can = false;
+            if(can) ans++;
+        }
+        cout << ans << "\n";
+    }
     return 0;
 }

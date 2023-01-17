@@ -10,10 +10,10 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T1, typename T2>
-ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
+template <typename T1, typename T2>
+ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define rnd(x, y) uniform_int_distribution<int>(x, y)(rng)
 
@@ -32,6 +32,14 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, k; cin >> n >> k;
+    vector<int> A(n);
+    for(auto &i : A) cin >> i;
+    vector<int> B;
+    for(int i = 1; i < n; i++) B.push_back(A[i]-A[i-1]-1);
+    sort(B.begin(), B.end(), greater<int>());
+    int ans = 1+A.back()-A.front();
+    for(int i = 0; i < k-1; i++) ans -= B[i];
+    cout << ans << "\n";
     return 0;
 }

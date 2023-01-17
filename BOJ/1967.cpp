@@ -10,10 +10,10 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T1, typename T2>
-ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) { for(auto i : v) os << i << " "; os << "\n"; return os; }
+template <typename T1, typename T2>
+ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define rnd(x, y) uniform_int_distribution<int>(x, y)(rng)
 
@@ -29,9 +29,29 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void dfs(int x, int d, vector<bool> &chk, vector<int> &D, vector<vector<pii>> &E) {
+    if(chk[x]) return;
+    D[x] = d, chk[x] = true;
+    for(auto i : E[x]) dfs(i.fi, d+i.se, chk, D, E);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<vector<pii>> A(n);
+    for(int i = 1; i < n; i++) {
+        int x, y, z; cin >> x >> y >> z; --x, --y;
+        A[x].push_back({y, z});
+        A[y].push_back({x, z});
+    }
+    vector<bool> chk(n, false);
+    vector<int> D(n);
+    dfs(0, 0, chk, D, A);
+    int idx = max_element(D.begin(), D.end()) - D.begin();
+    fill(chk.begin(), chk.end(), false);
+    fill(D.begin(), D.end(), 0);
+    dfs(idx, 0, chk, D, A);
+    cout << *max_element(D.begin(), D.end()) << "\n";
     return 0;
 }
