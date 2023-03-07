@@ -34,6 +34,18 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int q; cin >> q;
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    while(q--) {
+        int x; cin >> x;
+        if(x) {
+            pq.push({abs(x), x});
+        } else {
+            if(pq.size()) {
+                pii tmp = pq.top(); pq.pop();
+                cout << tmp.se << "\n";
+            } else cout << 0 << "\n";
+        }
+    }
     return 0;
 }

@@ -10,8 +10,6 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T>
-istream& operator>>(istream& is, vector<T>& v) { for(auto &i : v) is >> i; return is; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
@@ -34,6 +32,19 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> A(n);
+    for(auto &i : A) cin >> i;
+    vector<pii> B = {{0, 0}};
+    for(int i = 0; i < A.size(); i++) B.push_back({A[i], n-i});
+    sort(B.begin(), B.end());
+    ll ans = 0LL;
+    ll a = (ll)n*(n+1LL)/2LL, b = n;
+    for(int i = 1; i < B.size(); i++) {
+        //cout << a << " " << b << " " << B[i].fi-B[i-1].fi << "\n";
+        ans += (mod(a-b*(b+1LL)/2LL, P)*(B[i].fi-B[i-1].fi))%P;
+        a -= B[i].se, b--;
+    }
+    cout << ans%P << "\n";
     return 0;
 }

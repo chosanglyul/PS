@@ -10,8 +10,6 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T>
-istream& operator>>(istream& is, vector<T>& v) { for(auto &i : v) is >> i; return is; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
@@ -34,6 +32,29 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    cout << n*m-((n*m)%2) << "\n";
+    for(int i = 1; i <= m; i++) cout << 1 << " " << i << "\n";
+    if(n%2) {
+        for(int j = 2; j < n-2; j += 2) {
+            for(int i = m; i >= 2; i--) cout << j << " " << i << "\n";
+            for(int i = 2; i <= m; i++) cout << j+1 << " " << i << "\n";
+        }
+        for(int i = m; i >= 2; i -= 2) {
+            cout << n-1 << " " << i << "\n";
+            cout << n << " " << i << "\n";
+            cout << n << " " << i-1 << "\n";
+            cout << n-1 << " " << i-1 << "\n";
+        }
+        if(m%2) cout << n-1 << " " << 1 << "\n";
+        for(int j = n-2; j >= 2; j--) cout << j << " " << 1 << "\n";
+    } else {
+        for(int j = 2; j < n; j += 2) {
+            for(int i = m; i >= 2; i--) cout << j << " " << i << "\n";
+            for(int i = 2; i <= m; i++) cout << j+1 << " " << i << "\n";
+        }
+        for(int i = m; i >= 1; i--) cout << n << " " << i << "\n";
+        for(int j = n-1; j >= 2; j--) cout << j << " " << 1 << "\n";
+    }
     return 0;
 }

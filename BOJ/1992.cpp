@@ -31,9 +31,28 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void solve(int xs, int xe, int ys, int ye, vector<vector<char>>& A) {
+    //cout << xs << " " << xe << " " << ys << " " << ye << "\n";
+    bool same = true;
+    for(int i = xs; i < xe; i++)
+        for(int j = ys; j < ye; j++)
+            if(A[xs][ys] != A[i][j]) same = false;
+    if(same) cout << A[xs][ys];
+    else {
+        cout << "(";
+        solve(xs, xs+xe>>1, ys, ys+ye>>1, A);
+        solve(xs, xs+xe>>1, ys+ye>>1, ye, A);
+        solve(xs+xe>>1, xe, ys, ys+ye>>1, A);
+        solve(xs+xe>>1, xe, ys+ye>>1, ye, A);
+        cout << ")";
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<vector<char>> A(n, vector<char>(n)); cin >> A;
+    solve(0, n, 0, n, A); cout << "\n";
     return 0;
 }

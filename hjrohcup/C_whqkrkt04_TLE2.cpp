@@ -10,8 +10,6 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T>
-istream& operator>>(istream& is, vector<T>& v) { for(auto &i : v) is >> i; return is; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
@@ -31,9 +29,30 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+bool cmp(pll a, pll b, pll x, pll y) {
+    if(a.se >= 0 || b.se >= 0) return false;
+    if(a.fi*b.fi <= 0LL) return !a.fi && !b.fi;
+    return x == y;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    ll x, y; cin >> x >> y;
+    int n; cin >> n;
+    vector<pll> A(n), B(n);
+    for(int i = 0; i < n; i++) {
+        cin >> A[i].fi >> A[i].se;
+        A[i].fi -= x, A[i].se -= y;
+        B[i] = {A[i].fi*A[i].fi, A[i].se};
+        ll g = __gcd(B[i].fi, B[i].se);
+        B[i] = {B[i].fi/g, B[i].se/g};
+    }
+    vector<int> cnt(n, 1);
+    for(int i = 0; i < n; i++)
+        for(int j = i+1; j < n; j++)
+            if(cmp(A[i], A[j], B[i], B[j]))
+                cnt[i]++, cnt[j]++;
+    cout << *max_element(cnt.begin(), cnt.end()) << "\n";
     return 0;
 }

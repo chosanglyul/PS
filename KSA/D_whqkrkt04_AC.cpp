@@ -10,8 +10,6 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T>
-istream& operator>>(istream& is, vector<T>& v) { for(auto &i : v) is >> i; return is; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
@@ -31,9 +29,47 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void yes(int x, vector<int>& A) {
+    int n = A.size();
+    cout << "YES\n";
+    for(int j = 0, k = 0; j < n && k < (n+1)/2; j++) {
+        if(A[j]%x == 0) {
+            cout << A[j] << " ";
+            k++;
+        }
+    }
+    cout << "\n";
+    exit(EXIT_SUCCESS);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> A(n), P;
+    for(auto &i : A) cin >> i;
+    vector<bool> chk(32000, false);
+    for(int i = 2; i < chk.size(); i++) {
+        if(chk[i]) continue;
+        P.push_back(i);
+        for(int j = i*2; j < chk.size(); j += i) chk[j] = true;
+    }
+    for(int _t = 0; _t < 50; _t++) {
+        int tmp = A[rnd(0, n-1)];
+        for(auto i : P) {
+            if(tmp%i == 0) {
+                int cnt = 0;
+                for(int j = 0; j < n; j++) if(A[j]%i == 0) cnt++;
+                if(cnt >= (n+1)/2) yes(i, A);
+            }
+            while(tmp%i == 0) tmp /= i;
+        }
+        if(tmp > 1) {
+            int cnt = 0;
+            for(int j = 0; j < n; j++) if(A[j]%tmp == 0) cnt++;
+            if(cnt >= (n+1)/2) yes(tmp, A);
+        }
+    }
+    cout << "NO\n";
     return 0;
 }

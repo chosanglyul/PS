@@ -31,9 +31,39 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void f(int x, vector<int>& L, vector<int>& R) {
+    if(x < 0) return;
+    cout << (char)(x+'A');
+    f(L[x], L, R);
+    f(R[x], L, R);
+}
+
+void g(int x, vector<int>& L, vector<int>& R) {
+    if(x < 0) return;
+    g(L[x], L, R);
+    cout << (char)(x+'A');
+    g(R[x], L, R);
+}
+
+void h(int x, vector<int>& L, vector<int>& R) {
+    if(x < 0) return;
+    h(L[x], L, R);
+    h(R[x], L, R);
+    cout << (char)(x+'A');
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> L(26), R(26);
+    for(int i = 0; i < n; i++) {
+        char x, l, r; cin >> x >> l >> r;
+        L[x-'A'] = (l == '.' ? -1 : l-'A');
+        R[x-'A'] = (r == '.' ? -1 : r-'A');
+    }
+    f(0, L, R); cout << "\n";
+    g(0, L, R); cout << "\n";
+    h(0, L, R); cout << "\n";
     return 0;
 }

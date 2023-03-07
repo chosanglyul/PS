@@ -34,6 +34,24 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    vector<pii> d = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int n, m; cin >> n >> m;
+    vector<vector<char>> A(n, vector<char>(m)); cin >> A;
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+    for(int i = 0; i < n; i++) for(int j = 0; j < m; j++) if(A[i][j] =='0') vis[i][j] = true;
+    queue<piii> Q; Q.push({1, {0, 0}});
+    while(Q.size()) {
+        piii tmp = Q.front(); Q.pop();
+        if(tmp.se.fi == n-1 && tmp.se.se == m-1) {
+            cout << tmp.fi << "\n";
+            return 0;
+        }
+        for(int i = 0; i < d.size(); i++) {
+            int x = d[i].fi+tmp.se.fi, y = d[i].se+tmp.se.se;
+            if(x < 0 || x >= n || y < 0 || y >= m || vis[x][y]) continue;
+            vis[x][y] = true;
+            Q.push({tmp.fi+1, {x, y}});
+        }
+    }
     return 0;
 }

@@ -31,9 +31,26 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+void dfs(int x, int p, vector<vector<int>> &E, vector<int> &P) {
+    P[x] = p;
+    for(auto i : E[x]) {
+        if(i == p) continue;
+        dfs(i, x, E, P);
+    }
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<vector<int>> E(n);
+    for(int i = 1; i < n; i++) {
+        int x, y; cin >> x >> y; --x, --y;
+        E[x].push_back(y);
+        E[y].push_back(x);
+    }
+    vector<int> P(n);
+    dfs(0, -1, E, P);
+    for(int i = 1; i < n; i++) cout << P[i]+1 << "\n";
     return 0;
 }

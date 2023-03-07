@@ -10,8 +10,6 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T>
-istream& operator>>(istream& is, vector<T>& v) { for(auto &i : v) is >> i; return is; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
@@ -31,9 +29,34 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+int solve(vector<pll> &A) {
+    if(A.size() == 0) return 0;
+    sort(A.begin(), A.end());
+    int cnt = 1, ret = 0;
+    for(int i = 1; i < A.size(); i++) {
+        if(A[i-1] != A[i]) {
+            ret = max(ret, cnt);
+            cnt = 1;
+        } else cnt++;
+    }
+    return max(ret, cnt);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    ll x, y; cin >> x >> y;
+    int n; cin >> n;
+    vector<pll> L, R;
+    for(int i = 0; i < n; i++) {
+        ll xx, yy; cin >> xx >> yy;
+        if(yy >= y) continue;
+        pll tmp = {(xx-x)*(xx-x), y-yy};
+        ll gg = __gcd(tmp.fi, tmp.se);
+        tmp.fi /= gg, tmp.se /= gg;
+        if(xx > x) R.push_back(tmp);
+        if(xx < x) L.push_back(tmp);
+    }
+    cout << max(solve(L), solve(R)) << "\n";
     return 0;
 }

@@ -34,6 +34,29 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n, m; cin >> n >> m;
+    vector<int> A(100);
+    for(int i = 0; i < A.size(); i++) A[i] = i;
+    while(n--) {
+        int x, y; cin >> x >> y;
+        A[--x] = --y;
+    }
+    while(m--) {
+        int x, y; cin >> x >> y;
+        A[--x] = --y;
+    }
+    vector<int> D(A.size(), INF); D[0] = 0;
+    vector<bool> vis(A.size(), false); vis[0] = true;
+    queue<int> Q; Q.push(0);
+    while(Q.size()) {
+        int tmp = Q.front(); Q.pop();
+        for(int j = 1; j <= 6 && tmp+j < A.size(); j++) {
+            int nxt = A[tmp+j];
+            if(vis[nxt]) continue;
+            D[nxt] = D[tmp]+1, vis[nxt] = true;
+            Q.push(nxt);
+        }
+    }
+    cout << D.back() << "\n";
     return 0;
 }

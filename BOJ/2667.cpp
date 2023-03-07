@@ -31,9 +31,30 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+int dfs(int x, int y, vector<vector<char>>& A, vector<vector<bool>>& vis) {
+    if(x < 0 || x >= vis.size() || y < 0 || y >= vis[x].size() || A[x][y] == '0' || vis[x][y]) return 0;
+    vis[x][y] = true;
+    static vector<pii> d = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int ret = 1;
+    for(auto i : d) ret += dfs(x+i.fi, y+i.se, A, vis);
+    return ret;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<vector<char>> A(n, vector<char>(n)); cin >> A;
+    vector<vector<bool>> vis(n, vector<bool>(n, false));
+    vector<int> ans;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(vis[i][j] || A[i][j] == '0') continue;
+            ans.push_back(dfs(i, j, A, vis));
+        }
+    }
+    sort(ans.begin(), ans.end());
+    cout << ans.size() << "\n";
+    for(auto i : ans) cout << i << "\n";
     return 0;
 }

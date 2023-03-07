@@ -31,9 +31,31 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+ll solve(int n, vector<int> &A) {
+    if(A.size() == n) return 1LL;
+    ll ans = 0LL;
+    for(int i = 0; i < n; i++) {
+        bool can = true;
+        for(int j = 1; j <= A.size(); j++) {
+            if(A[A.size()-j] == i+j || A[A.size()-j] == i-j || A[A.size()-j] == i) {
+                can = false;
+                break;
+            }
+        }
+        if(can) {
+            A.push_back(i);
+            ans += solve(n, A);
+            A.pop_back();
+        }
+    }
+    return ans;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> A;
+    cout << solve(n, A) << "\n";
     return 0;
 }

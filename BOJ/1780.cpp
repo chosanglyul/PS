@@ -31,9 +31,30 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+vector<int> solve(vector<vector<int>> &A, int xs, int xe, int ys, int ye) {
+    vector<int> cnt(3, 0);
+    bool same = true;
+    for(int x = xs; x < xe; x++)
+        for(int y = ys; y < ye; y++)
+            same = same && A[x][y] == A[xs][ys];
+    if(same) cnt[A[xs][ys]+1]++;
+    else {
+        vector<int> X = {xs, (xs*2+xe)/3, (xs+xe*2)/3, xe}, Y = {ys, (ys*2+ye)/3, (ys+ye*2)/3, ye};
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                vector<int> T = solve(A, X[i], X[i+1], Y[j], Y[j+1]);
+                for(int k = 0; k < 3; k++) cnt[k] += T[k];
+            }
+        }
+    }
+    return cnt;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<vector<int>> A(n, vector<int>(n)); cin >> A;
+    cout << solve(A, 0, n, 0, n) << "\n";
     return 0;
 }

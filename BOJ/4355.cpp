@@ -35,7 +35,7 @@ int main() {
         cin >> n;
         if(n == 0) break;
         if(n == 1) {
-            cout << 1 << "\n";
+            cout << 0 << "\n";
             continue;
         }
         vector<pi> A;

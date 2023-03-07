@@ -10,8 +10,6 @@ typedef pair<ll, pll> plll;
 const int INF = 1e9+1;
 const int P = 1000000007;
 const ll LLINF = (ll)1e18+1;
-template <typename T>
-istream& operator>>(istream& is, vector<T>& v) { for(auto &i : v) is >> i; return is; }
 template <typename T1, typename T2>
 ostream& operator<<(ostream& os, const pair<T1, T2>& p) { os << p.fi << " " << p.se; return os; }
 template <typename T>
@@ -31,9 +29,41 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+int parse(deque<char> &hi, deque<char> &lo) {
+    string s;
+    for(auto i : hi) s += i;
+    s += "666";
+    for(auto i : lo) s += i;
+    return stoi(s);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    /*
+    vector<int> A;
+    for(int i = 0; i <= 10000; i++) {
+        string str = to_string(i);
+        deque<char> hi = deque<char>(str.begin(), str.end()), lo;
+        while(hi.size()) {
+            A.push_back(parse(hi, lo));
+            lo.push_front(hi.back());
+            hi.pop_back();
+        }
+        A.push_back(parse(hi, lo));
+    }
+    sort(A.begin(), A.end());
+    A.erase(unique(A.begin(), A.end()), A.end());
+    for(int i = 0; i < 100; i++) cout << A[i] << " ";
+    cout << "\n";
+    int n; cin >> n;
+    cout << A[--n] << "\n";
+    */
+    int n, cnt = 0; cin >> n;
+    while(n) {
+        string s = to_string(++cnt);
+        if(s.find("666") != string::npos) n--;
+    }
+    cout << cnt << "\n";
     return 0;
 }

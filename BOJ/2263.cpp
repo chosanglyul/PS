@@ -31,9 +31,28 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+typedef vector<int>::iterator iter;
+
+void solve(int as, int ae, int bs, int be,
+            vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+    if(as == ae || bs == be) return;
+    int ami = C[B[be-1]];
+    int lsiz = ami-as, rsiz = ae-ami-1;
+    D.push_back(B[be-1]+1);
+    solve(as, as+lsiz, bs, bs+lsiz, A, B, C, D);
+    solve(ae-rsiz, ae, bs+lsiz, be-1, A, B, C, D);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int n; cin >> n;
+    vector<int> A(n), B(n), C(n), D; cin >> A >> B;
+    for(int i = 0; i < n; i++) {
+        --B[i];
+        C[--A[i]] = i;
+    }
+    solve(0, n, 0, n, A, B, C, D);
+    cout << D;
     return 0;
 }

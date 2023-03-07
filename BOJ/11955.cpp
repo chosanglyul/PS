@@ -34,6 +34,28 @@ ll inv(ll a, ll m) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+    int r, s, k; cin >> r >> s >> k;
+    vector<vector<char>> A(r, vector<char>(s)); cin >> A;
+    int ans = 0, xx = 0, yy = 0;
+    for(int i = 0; i+k <= r; i++) {
+        for(int j = 0; j+k <= s; j++) {
+            int cnt = 0;
+            for(int x = 1; x < k-1; x++)
+                for(int y = 1; y < k-1; y++)
+                    cnt += A[i+x][j+y] == '*';
+            if(cnt > ans) {
+                ans = cnt;
+                xx = i, yy = j;
+            }
+        }
+    }
+    A[xx][yy] = A[xx+k-1][yy] = A[xx][yy+k-1] = A[xx+k-1][yy+k-1] = '+';
+    for(int x = 1; x < k-1; x++) A[xx+x][yy] = A[xx+x][yy+k-1] = '|';
+    for(int y = 1; y < k-1; y++) A[xx][yy+y] = A[xx+k-1][yy+y] = '-';
+    cout << ans << "\n";
+    for(auto &i : A) {
+        for(auto j : i) cout << j;
+        cout << "\n";
+    }
     return 0;
 }
