@@ -29,40 +29,56 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
+class SALCP {
+    private:
+    int n;
+    string s;
+    vector<int> A, B, C;
+
+    public:
+    SALCP(string &s) {
+        this->s = s;
+        n = s.size();
+    }
+
+    vector<int> sa() {
+        A.clear(); B.clear();
+        for(int i = 0; i < n; i++) A.push_back(i);
+        for(auto i : s) B.push_back(i-'a');
+        for(int d = 1; ; d <<= 1) {
+            auto cmp = [&](int a, int b) {
+                if(B[a] != B[b]) return B[a] < B[b];
+                a += d, b += d;
+                return (a < n && b < n) ? (B[a] < B[b]) : (a > b);
+            };
+            sort(A.begin(), A.end(), cmp);
+            vector<int> T(n, 0);
+            for(int i = 1; i < n; i++) T[i] = T[i-1]+cmp(A[i-1], A[i]);
+            for(int i = 0; i < n; i++) B[A[i]] = T[i];
+            if(T.back() == n-1) break;
+        }
+        return A;
+    }
+
+    vector<int> lcp() {
+        C.resize(n-1);
+        for(int i = 0, j = 0; i < n; i++, j = max(j-1, 0)) {
+            if(B[i] == n-1) continue;
+            while(s[i+j] == s[A[B[i]+1]+j]) j++;
+            C[B[i]] = j;
+        }
+        return C;
+    }
+};
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     string s; cin >> s;
-    int n = s.size();
-    vector<int> A(n), B(n);
-    for(int i = 0; i < n; i++) {
-        A[i] = i;
-        B[i] = s[i]-'a';
-    }
-    for(int d = 1; ; d <<= 1) {
-        auto cmp = [&](int a, int b) {
-            if(B[a] != B[b]) return B[a] < B[b];
-            a += d, b += d;
-            return (a < n && b < n) ? (B[a] < B[b]) : (a > b);
-        };
-        sort(A.begin(), A.end(), cmp);
-        vector<int> T(n, 0);
-        for(int i = 1; i < n; i++) {
-            if(cmp(A[i-1], A[i])) T[i] = T[i-1]+1;
-            else T[i] = T[i-1];
-        }
-        for(int i = 0; i < n; i++) B[A[i]] = T[i];
-        if(T.back() == n-1) break;
-    }
-    for(auto i : A) cout << i+1 << " ";
-    cout << "\n";
-    vector<int> C(n-1);
-    for(int i = 0, j = 0; i < n; i++, j = max(j-1, 0)) {
-        if(B[i] == n-1) continue;
-        int k = A[B[i]+1];
-        while(s[i+j] == s[k+j]) j++;
-        C[B[i]] = j;
-    }
-    cout << "x " << C;
+    SALCP salcp(s);
+    vector<int> sa = salcp.sa();
+    for(auto &i : sa) i++;
+    vector<int> lcp = salcp.lcp();
+    cout << sa << "x " << lcp;
     return 0;
 }

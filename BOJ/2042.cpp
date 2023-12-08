@@ -27,60 +27,48 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
-class segtree {
+class IndexTree {
     private:
     int n;
     vector<ll> seg;
-    void init(int i, int s, int e, vector<ll>& A) {
-        if(s+1 == e) seg[i] = A[s];
-        else {
-            init(i<<1, s, s+e>>1, A);
-            init(i<<1|1, s+e>>1, e, A);
-            seg[i] = seg[i<<1]+seg[i<<1|1];
-        }
-    }
-    void set(vector<ll>& A) {
-        n = A.size();
-        seg.resize(4*n);
-        init(1, 0, n, A);
-    }
-    void update(int i, int s, int e, int j, ll x) {
-        if(j < s || j >= e) return;
-        if(s+1 == e) seg[i] = x;
-        else {
-            update(i<<1, s, s+e>>1, j, x);
-            update(i<<1|1, s+e>>1, e, j, x);
-            seg[i] = seg[i<<1]+seg[i<<1|1];
-        }
-    }
-    ll query(int i, int s, int e, int l, int r) {
-        if(l <= s && e <= r) return seg[i];
-        else if(r <= s || l >= e) return 0LL;
-        else return query(i<<1, s, s+e>>1, l, r)+
-                    query(i<<1|1, s+e>>1, e, l, r);
-    }
-    
+
     public:
-    segtree(vector<ll>& A) { set(A); }
-    segtree(int siz) {
-        vector<ll> A(siz);
-        for(auto &i : A) cin >> i;
-        set(A);
+    IndexTree(vector<ll> &A) {
+        n = A.size();
+        seg.resize(2*n, 0LL);
+        for(int i = 0; i < n; i++) seg[i+n] = A[i];
+        for(int i = n-1; i; i--) seg[i] = seg[i<<1]+seg[i<<1|1];
     }
-    void update(int j, ll x) { update(1, 0, n, j, x); }
-    ll query(int l, int r) { return query(1, 0, n, l, r); }
+
+    ll query(int l, int r) {
+        ll ans = 0LL;
+        for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
+            if(l&1) ans += seg[l++];
+            if(r&1) ans += seg[--r];
+        }
+        return ans;
+    }
+
+    void update(int i, ll x) {
+        for(i += n; i; i >>= 1) seg[i] += x;
+    }
 };
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n, m, k; cin >> n >> m >> k;
-    segtree s(n);
+    vector<ll> A(n);
+    for(auto &i : A) cin >> i;
+    IndexTree s(A);
     int q = m+k;
     while(q--) {
         ll x, y, z; cin >> x >> y >> z;
-        if(x == 1) s.update(--y, z);
-        else cout << s.query(--y, z) << "\n";
+        if(x == 1) {
+            ll t = z-A[--y];
+            A[y] = z;
+            s.update(y, t);
+        } else cout << s.query(--y, z) << "\n";
     }
     return 0;
 }

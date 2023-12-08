@@ -23,53 +23,62 @@ ll inv(ll a, ll m) { //return x when ax mod m = 1, fail -> -1
     return mod(x, m);
 }
 
-vector<int> S, SCC;
-vector<vector<int>> VS, ES, E, I;
+struct SCC {
+    private:
+    int n;
+    std::vector<bool> chk;
+    std::vector<std::vector<int>> E, F;
 
-bool cmp(vector<int>& A, vector<int>& B) { return A[0] < B[0]; }
+    void dfs(int x, std::vector<std::vector<int>> &E, std::vector<int> &st) {
+        if(chk[x]) return;
+        chk[x] = true;
+        for(auto i : E[x]) dfs(i, E, st);
+        st.push_back(x);
+    }
 
-void dfs1(int x, vector<bool>& visit) {
-    if(visit[x]) return;
-    visit[x] = true;
-    for(auto &i : E[x]) dfs1(i, visit);
-    S.push_back(x);
-}
+    public:
+    SCC(std::vector<std::vector<int>> &E) {
+        n = E.size();
+        this->E = E;
+        F.resize(n);
+        chk.resize(n, false);
+        for(int i = 0; i < n; i++)
+            for(auto j : E[i]) F[j].push_back(i);
+    }
 
-void dfs2(int x, vector<bool>& visit) {
-    if(visit[x]) return;
-    visit[x] = true;
-    VS.back().push_back(x);
-    for(auto &i : I[x]) dfs2(i, visit);
-}
+    std::vector<std::vector<int>> getSCC() {
+        std::vector<int> st;
+        std::fill(chk.begin(), chk.end(), false);
+        for(int i = 0; i < n; i++) dfs(i, E, st);
+        std::reverse(st.begin(), st.end());
+        std::fill(chk.begin(), chk.end(), false);
+        std::vector<std::vector<int>> scc;
+        for(int i = 0; i < n; i++) {
+            if(chk[st[i]]) continue;
+            std::vector<int> T;
+            dfs(st[i], F, T);
+            scc.push_back(T);
+        }
+        return scc;
+    }
+};
 
 int main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int v, e; cin >> v >> e;
-    E.resize(v), I.resize(v);
-    for(int i = 0; i < e; i++) {
-        int x, y; cin >> x >> y;
-        x--, y--;
-        E[x].push_back(y);
-        I[y].push_back(x);
+    cin.tie(nullptr);
+    int n, m; cin >> n >> m;
+    vector<vector<int>> E(n);
+    for(int i = 0; i < m; i++) {
+        int u, v; cin >> u >> v; --u, --v;
+        E[u].push_back(v);
     }
-    vector<bool> visit(v, false);
-    for(int i = 0; i < v; i++)
-        if(!visit[i]) dfs1(i, visit);
-    visit = vector<bool>(v, false);
-    while(S.size()) {
-        int x = S.back();
-        if(!visit[x]) {
-            VS.push_back(vector<int>());
-            dfs2(x, visit);
-            sort(VS.back().begin(), VS.back().end());
-        }
-        S.pop_back();
-    }
-    sort(VS.begin(), VS.end(), cmp);
-    cout << VS.size() << "\n";
-    for(auto &i : VS) {
-        for(auto j : i) cout << j+1 << " ";
+    SCC scc(E);
+    vector<vector<int>> ans = scc.getSCC();
+    for(auto &i : ans) sort(i.begin(), i.end());
+    sort(ans.begin(), ans.end());
+    cout << ans.size() << "\n";
+    for(auto &T : ans) {
+        for(auto i : T) cout << i+1 << " ";
         cout << "-1\n";
     }
     return 0;

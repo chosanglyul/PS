@@ -29,34 +29,86 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
+template <int MAXN>
+struct SuffixAutomaton {
+    struct Node {
+        int nxt[MAXN];
+        int len = 0, link = 0;
+        Node() { memset(nxt, -1, sizeof nxt); }
+    };
+
+    int root = 0;
+    vector<Node> V;
+    
+    SuffixAutomaton() {
+        V.resize(1);
+        V.reserve(2000005);
+        V.back().link = -1;
+    }
+
+    void add(int c) {
+        V.push_back(Node());
+        V.back().len = V[root].len+1;
+        int tmp = root;
+        root = (int)V.size()-1;
+        while(tmp != -1 && V[tmp].nxt[c] == -1) {
+            V[tmp].nxt[c] = root;
+            tmp = V[tmp].link;
+        }
+        if(tmp != -1) {
+            int x = V[tmp].nxt[c];
+            if(V[tmp].len+1 < V[x].len) {
+                int y = x;
+                x = (int)V.size();
+                V.push_back(V[y]);
+                V.back().len = V[tmp].len+1;
+                V[y].link = x;
+                while(tmp != -1 && V[tmp].nxt[c] == y) {
+                    V[tmp].nxt[c] = x;
+                    tmp = V[tmp].link;
+                }
+            }
+            V[root].link = x;
+        }
+    }
+
+    void topo(function<void(int, int, int)> f) {
+        vector<int> indeg(V.size(), 0);
+        for(auto &node : V) {
+            for(auto j : node.nxt) {
+                if(j == -1) continue;
+                indeg[j]++;
+            }
+        }
+        queue<int> Q;
+        for(int i = 0; i < (int)indeg.size(); i++)
+            if(indeg[i] == 0) Q.push(i);
+        while(Q.size()) {
+            int tmp = Q.front(); Q.pop();
+            auto &node = V[tmp];
+            for(int j = 0; j < MAXN; j++) {
+                if(node.nxt[j] == -1) continue;
+                f(node.nxt[j], tmp, j);
+                if(--indeg[node.nxt[j]] == 0)
+                    Q.push(node.nxt[j]);
+            }
+        }
+    }
+};
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     string s; cin >> s;
-    int n = s.size();
-    vector<int> SA, R;
-    for(int i = 0; i < n; i++) {
-        SA.push_back(i);
-        R.push_back(s[i] - 'a');
-    }
-    for(int d = 1; d < n; d <<= 1) {
-        auto cmp = [&](int a, int b) {
-            if(R[a] != R[b]) return R[a] < R[b];
-            return (a+d < n && b+d < n) ? (R[a+d] < R[b+d]) : (a > b);
-        };
-        sort(SA.begin(), SA.end(), cmp);
-        vector<int> T(n, 0);
-        for(int i = 1; i < n; i++) T[i] = T[i-1] + cmp(SA[i-1], SA[i]);
-        for(int i = 0; i < n; i++) R[SA[i]] = T[i];
-    }
-    vector<int> LCP(n-1, 0);
-    for(int i = 0, j = 0; i < n; i++, j = max(j-1, 0)) {
-        if(R[i] == n-1) continue;
-        while(s[i+j] == s[SA[R[i]+1]+j]) j++;
-        LCP[R[i]] = j;
-    }
-    ll ans = (ll)n*(n+1)/2LL;
-    for(auto i : LCP) ans -= i;
+    SuffixAutomaton<26> sa;
+    for(auto c : s) sa.add(c-'a');
+    vector<ll> cnt(sa.V.size(), 0LL); cnt[0] = 1LL;
+    sa.topo([&](int x, int y, int c) {
+        cnt[x] += cnt[y];
+    });
+    ll ans = 0LL;
+    for(int i = 1; i < cnt.size(); i++)
+        ans += cnt[i];
     cout << ans << "\n";
     return 0;
 }

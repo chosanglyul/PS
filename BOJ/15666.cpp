@@ -29,19 +29,16 @@ ll inv(ll a, ll m) {
     return mod(x, m);
 }
 
-void solve(int n, int m, vector<int>& A, vector<int>& B, vector<vector<int>>& C) {
-    if(m == 0) {
-        vector<int> T;
-        
-        for(auto i : A) cout << B[i] << " ";
+void solve(int idx, int jdx, vector<int> &A, vector<int> &B, vector<int> &cnt) {
+    if(idx == 0) {
+        for(auto i : B) cout << A[i] << " ";
         cout << "\n";
         return;
     }
-    int st = A.empty() ? 0 : A.back();
-    for(int i = st; i < n; i++) {
-        A.push_back(i);
-        solve(n, m-1, A, B);
-        A.pop_back();
+    for(int i = jdx; i < A.size(); i++) {
+            B.push_back(i);
+            solve(idx-1, i, A, B, cnt);
+            B.pop_back();
     }
 }
 
@@ -49,9 +46,13 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     int n, m; cin >> n >> m;
-    vector<int> A, B(n);
-    for(auto &i : B) cin >> i;
-    sort(B.begin(), B.end());
-    solve(n, m, A, B);
+    vector<int> A(n), B, cnt;
+    for(auto &i : A) cin >> i;
+    sort(A.begin(), A.end());
+    vector<int> C(A);
+    C.erase(unique(C.begin(), C.end()), C.end());
+    cnt.resize(C.size(), 0);
+    for(auto i : A) cnt[lower_bound(C.begin(), C.end(), i) - C.begin()]++;
+    solve(m, 0, C, B, cnt);
     return 0;
 }
